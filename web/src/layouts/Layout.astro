@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+const {title, page} = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Paintings, studies, and a practice in looking. The artist portfolio of Hong." />
+  <meta name="theme-color" content="#f6f4ef" />
+  <title>{title} — Hong</title>
+  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+</head>
+<body data-page={page}>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="sidebar">
+    <a class="wordmark" href={base} aria-label="Hong, home" data-artist-name>Hong</a>
+    <span class="eyebrow identity-note">ARTIST PORTFOLIO</span>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">＋</span></button>
+    <nav id="navigation" aria-label="Main navigation">
+      <a href={base} aria-current={page === 'home' ? 'page' : undefined}>Home</a>
+      <a href={`${base}works/`} aria-current={page === 'works' ? 'page' : undefined}>Selected Works <span aria-hidden="true"><svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
+      <div id="series-nav"></div>
+      <a href={`${base}about/`} aria-current={page === 'about' ? 'page' : undefined}>About & Contact</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="small-dot"></span> Painting & visual art<br/><span class="muted">An ongoing collection.</span></div>
+  </header>
+  <main id="main" tabindex="-1">
+    <div id="content-status" role="status" class="content-status" hidden></div>
+    <noscript><p class="content-status">Please enable JavaScript to browse the artwork and artist information.</p></noscript>
+    <slot />
+    <footer><span>© {new Date().getFullYear()} <span data-artist-name>Hong</span></span><span>Works, observations, and things in between.</span><a href={`${base}about/#contact`}>Get in touch <svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></a></footer>
+  </main>
+  <dialog id="artwork-dialog" aria-labelledby="lightbox-title">
+    <div class="lightbox-top"><span class="eyebrow" id="lightbox-count"></span><button id="lightbox-close" aria-label="Close artwork">Close ×</button></div>
+    <div class="lightbox-stage"><img id="lightbox-image" alt="" /><p id="image-error" hidden>This image could not be loaded.</p></div>
+    <div class="lightbox-bottom"><div><h2 id="lightbox-title"></h2><p id="lightbox-details"></p><p id="lightbox-description"></p></div><div class="lightbox-controls"><button id="lightbox-prev" aria-label="Previous artwork">←</button><button id="lightbox-next" aria-label="Next artwork">→</button></div></div>
+  </dialog>
+  <script>import '../lib/site';</script>
+</body>
+</html>

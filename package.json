@@ -1,0 +1,35 @@
+{
+  "name": "hong-artist-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "astro dev --root web --host 0.0.0.0 --ignore-lock",
+    "build": "astro build --root web",
+    "typecheck": "tsc --noEmit",
+    "schema:extract": "sanity schema extract",
+    "deploy": "sanity deploy",
+    "preview": "astro preview --root web --host 0.0.0.0 --ignore-lock",
+    "studio:dev": "sanity dev --host 0.0.0.0",
+    "studio:build": "sanity build",
+    "studio:deploy": "sanity deploy",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "astro": "^7.4.7",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sanity": "6.22.0",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.2.0",
+    "typescript": "^5.9.3"
+  }
+}
