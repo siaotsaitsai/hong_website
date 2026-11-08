@@ -35,7 +35,7 @@ function render(content: Content, sample: boolean) {
   gallery=[];
   const settings=content.settings;const profile=content.profile;
   const name=profile?.name || 'Hong Yang';document.querySelectorAll('[data-artist-name]').forEach(el=>{el.textContent=name;if(el.classList.contains('wordmark'))el.setAttribute('aria-label',`${name}, home`);});
-  const pageTitles: Record<string,string> = {works:'Portfolio', cv:'CV', statement:'Artist Statement', contact:'Contact', about:'About'};
+  const pageTitles: Record<string,string> = {works:'Portfolio', cv:'CV', statement:'Artist Statement', about:'About'};
   document.title=`${document.body.dataset.page==='home' ? (settings?.siteTitle || 'Home') : (pageTitles[document.body.dataset.page || ''] || 'Home')} — ${name}`;
   if(settings?.description) document.querySelector('meta[name="description"]')?.setAttribute('content',settings.description);
   let collections=settings?.collections ?? content.collections;
@@ -53,7 +53,6 @@ function render(content: Content, sample: boolean) {
   if(statementPage) statementPage.innerHTML=`<div class="statement statement-page">${statement || '<p>Artist statement coming soon.</p>'}</div>`;
   const cvPage=document.querySelector('#cv-content');
   if(cvPage) cvPage.innerHTML=(profile?.cv || []).length ? `<section class="cv">${profile!.cv!.map(item=>`<div><span class="eyebrow">${e(item.category)}</span><span>${e(item.year)}</span><p>${e(item.title)}</p></div>`).join('')}</section>` : '<p class="empty-state">CV coming soon.</p>';
-  const contact=document.querySelector('#contact-links');if(contact) {let links='';if(settings?.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) links+=`<a class="text-link" href="mailto:${e(encodeURIComponent(settings.email).replace('%40','@'))}">${e(settings.email)} <svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></a>`;if(settings?.instagram){try{const url=new URL(settings.instagram);if(url.protocol==='https:')links+=`<a class="text-link" href="${e(url.href)}" target="_blank" rel="noopener noreferrer">Instagram <svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></a>`;}catch{}}contact.innerHTML=links || '<p class="muted">Contact details coming soon.</p>';}
   document.querySelectorAll('[aria-busy]').forEach(el=>el.setAttribute('aria-busy','false'));
 }
 render(placeholder,true);
