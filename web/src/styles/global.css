@@ -3,3 +3,5 @@
 .arrow{display:inline-block;width:11px;height:11px;vertical-align:middle;flex-shrink:0}
 
 #statement-content .statement-page{padding:40px 0 0;max-width:720px;font-size:16px;line-height:1.8}
+
+#home-artwork{padding-top:45px}.page-heading h1:first-child{margin-top:0}.collection-heading{display:block}@media(max-width:700px){#home-artwork{padding-top:32px}}
