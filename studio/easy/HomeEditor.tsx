@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
 import {useClient,useCurrentUser} from 'sanity'
+import {useRouter} from 'sanity/router'
 import type {LayoutProps} from 'sanity'
 import {createHomeGateway} from './homeGateway'
 import {HomeEditorScreen} from './HomeEditorScreen'
@@ -11,5 +12,6 @@ export function HomeEditor() {
   return <HomeEditorScreen gateway={gateway} userName={user?.name || 'Artist'}/>
 }
 export function EditorLayout(props: LayoutProps) {
-  return typeof window!=='undefined' && /^\/edit(?:\/|$)/.test(window.location.pathname) ? <HomeEditor/> : props.renderDefault(props)
+  useRouter() // Re-render when the tool changes through Studio navigation.
+  return typeof window!=='undefined' && /\/edit\/?$/.test(window.location.pathname) ? <HomeEditor/> : props.renderDefault(props)
 }
