@@ -1,5 +1,6 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {HomeEditor, EditorLayout} from './studio/easy/HomeEditor'
 import {schemaTypes} from './studio/schemaTypes'
 import {structure, singletonTypes, defaultDocumentNode} from './studio/structure'
 
@@ -13,6 +14,8 @@ export default defineConfig({
   title: 'Artist Portfolio · Studio',
   projectId,
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
+  components: {layout: EditorLayout},
+  tools: (previous) => [...previous, {name: 'edit', title: 'Easy editor', component: HomeEditor}],
   plugins: [structureTool({title: 'Website', structure, defaultDocumentNode})],
   schema: {
     types: schemaTypes,

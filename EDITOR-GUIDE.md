@@ -87,3 +87,26 @@ content, even if they add preview parameters to a standalone URL.
 If you see “Could not load preview content”, check that you accepted the project
 invitation and that your role permits reading/editing drafts. The deployment token
 cannot be used as a content editor account. Do not share passwords or tokens.
+
+## Simple Home editor (first release)
+
+Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
+existing project member account. This is a custom interface that matches the
+website, rather than the standard document editor.
+
+1. Choose **Upload an image**, or select an already published portfolio work.
+2. Enter an image description for uploaded pictures. Add an optional caption,
+   homepage text, and portfolio button label.
+3. Check the live preview; switch to Mobile to inspect the narrow layout.
+4. Click **Save draft** to keep your work without changing the website.
+5. Click **Publish**, then **Yes, publish homepage** when you are ready.
+
+The editor warns before leaving with unsaved changes. Save and publish operations
+check document revisions; a conflict keeps your current inputs and asks you to
+reload rather than overwriting someone else's work. The existing account controls
+all read, image-upload and write permissions. No administrator token is embedded.
+
+This first release focuses on **Home**. Use **Other pages & advanced tools** for
+Portfolio, CV, Artist Statement, and About until those custom screens are added.
+The original editor remains at <https://hong-portfolio-htq7wor5.sanity.studio/structure>.
+Uploads are sent when a file is chosen; uploading alone does not publish the page.

@@ -163,3 +163,24 @@ settings and trust the platform-supplied CA. Do not disable certificate checks.
 
 The live browser was separately checked against the public Sanity API. Actual
 member upload and publication testing remain separate from frontend verification.
+
+## Custom Home editor
+
+`studio/easy/` implements the first custom page-editing screen, served at
+<https://hong-portfolio-htq7wor5.sanity.studio/edit>. It replaces the Studio layout
+for that tool route while retaining the existing authenticated project-member
+context. The standard editor is preserved at `/structure`. This reuses the current
+hosting and authentication; it is not a separate CMS or a new hosting service.
+
+The UI is in `HomeEditorScreen.tsx`; the authenticated wrapper is in `HomeEditor.tsx`.
+`homeGateway.ts` handles uploads and draft/publish mutations. Draft saving leaves
+published content untouched. Publishing checks both document revisions and replaces
+the published document and deletes the draft atomically. Unrelated settings fields
+are retained. The custom screen intentionally supports Home only in this release.
+
+The interaction tests use a Vite-served test harness on port 3333 and a mock gateway.
+The persistence test uses the actual Sanity client against an in-process HTTP test
+server to exercise request bodies and revision-conflict behavior without touching
+cloud content. These tests do not establish that the artist's real account has
+accepted its invitation or has upload/publish permission; that requires member
+acceptance testing after login.

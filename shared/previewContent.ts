@@ -8,7 +8,10 @@ const canonical = (id: string) => id.replace(/^drafts\./, '')
 // Resolve authenticated editor documents in memory. Nothing here writes to Sanity.
 export function resolvePreview(documents: RawDocument[], displayed?: Partial<RawDocument>): Content {
   const docs = new Map<string, RawDocument>()
-  for (const doc of documents) docs.set(canonical(doc._id), doc)
+  for (const doc of documents) {
+    const previous=docs.get(canonical(doc._id))
+    if(!previous?._id.startsWith('drafts.') || doc._id.startsWith('drafts.')) docs.set(canonical(doc._id),doc)
+  }
   if (displayed?._id && displayed._type) docs.set(canonical(displayed._id), displayed as RawDocument)
   const dereference = (value: unknown) => docs.get(canonical(String(object(value)._ref || '')))
   function image(value: unknown): Image | undefined {
