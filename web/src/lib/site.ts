@@ -34,8 +34,8 @@ dialog.addEventListener('keydown',ev=>{if(ev.key==='ArrowLeft'){ev.preventDefaul
 function render(content: Content, sample: boolean) {
   gallery=[];
   const settings=content.settings;const profile=content.profile;
-  const name=profile?.name || 'Hong';document.querySelectorAll('[data-artist-name]').forEach(el=>el.textContent=name);
-  document.title=`${document.body.dataset.page==='home' ? (settings?.siteTitle || 'Home') : document.body.dataset.page==='works' ? 'Selected Works' : 'About & Contact'} — ${name}`;
+  const name=profile?.name || 'Hong Yang';document.querySelectorAll('[data-artist-name]').forEach(el=>{el.textContent=name;if(el.classList.contains('wordmark'))el.setAttribute('aria-label',`${name}, home`);});
+  document.title=`${document.body.dataset.page==='home' ? (settings?.siteTitle || 'Home') : document.body.dataset.page==='works' ? 'Selected Works' : document.body.dataset.page==='contact' ? 'Contact' : 'About'} — ${name}`;
   if(settings?.description) document.querySelector('meta[name="description"]')?.setAttribute('content',settings.description);
   let collections=settings?.collections ?? content.collections;
   collections=collections.filter(Boolean).map(col=>({...col,artworks:(col.artworks || []).filter(Boolean)}));

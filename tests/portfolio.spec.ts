@@ -16,7 +16,7 @@ test('empty dataset: English home, gallery, keyboard navigation, and focus retur
   await expect(page.getByRole('dialog')).toBeVisible();await expect(page.locator('#lightbox-title')).toHaveText('An Open Window');
   await page.keyboard.press('ArrowRight');await expect(page.locator('#lightbox-title')).toHaveText('Quiet Arrangement');
   await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();await expect(first).toBeFocused();
-  await page.goto('/about/');await expect(page.locator('#about-content')).toHaveAttribute('aria-busy','false');await expect(page.locator('#contact-links')).toContainText('Contact details coming soon');
+  await page.goto('/about/');await expect(page.locator('#about-content')).toHaveAttribute('aria-busy','false');await expect(page.locator('#contact-links')).toHaveCount(0);await page.getByRole('link',{name:'Contact',exact:true}).click();await expect(page.locator('#contact-links')).toContainText('Contact details coming soon');
   expect(errors).toEqual([]);
 });
 test('published content: ordering, descriptions, details, and safe rendering', async ({page}) => {
@@ -28,7 +28,7 @@ test('published content: ordering, descriptions, details, and safe rendering', a
   await page.goto('/works/');await expect(page.locator('.wordmark')).toHaveText('Jane Artist');
   await expect(page.locator('.collection-heading h2')).toHaveText(['Second first','First second']);await expect(page.locator('.placeholder-note')).toHaveCount(0);
   await page.locator('[data-artwork]').click();await expect(page.locator('#lightbox-details')).toContainText('Oil on canvas');await page.getByRole('button',{name:'Detail 1',exact:true}).click();await expect(page.locator('#lightbox-image')).toHaveAttribute('alt','Painting detail');
-  await page.goto('/about/');await expect(page.locator('.about-copy h2')).toHaveText('<img src=x onerror=alert(1)>');await expect(page.locator('.about-copy h2 img')).toHaveCount(0);await expect(page.getByRole('link',{name:'artist@example.com'})).toHaveAttribute('href','mailto:artist@example.com');
+  await page.goto('/about/');await expect(page.locator('.about-copy h2')).toHaveText('<img src=x onerror=alert(1)>');await expect(page.locator('.about-copy h2 img')).toHaveCount(0);await page.getByRole('link',{name:'Contact',exact:true}).click();await expect(page.getByRole('link',{name:'artist@example.com'})).toHaveAttribute('href','mailto:artist@example.com');
 });
 test('network failure is visible and retry recovers',async ({page})=>{
   await page.route(endpoint,r=>r.fulfill({status:503,body:'Service unavailable'}));await page.goto('/');await expect(page.getByRole('status')).toContainText('temporarily unavailable');

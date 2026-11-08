@@ -8,30 +8,29 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Paintings, studies, and a practice in looking. The artist portfolio of Hong." />
+  <meta name="description" content="Paintings, studies, and a practice in looking. The artist portfolio of Hong Yang." />
   <meta name="theme-color" content="#f6f4ef" />
-  <title>{title} — Hong</title>
+  <title>{title} — Hong Yang</title>
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body data-page={page}>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="sidebar">
-    <a class="wordmark" href={base} aria-label="Hong, home" data-artist-name>Hong</a>
-    <span class="eyebrow identity-note">ARTIST PORTFOLIO</span>
+    <a class="wordmark" href={base} aria-label="Hong Yang, home" data-artist-name>Hong Yang</a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">＋</span></button>
     <nav id="navigation" aria-label="Main navigation">
       <a href={base} aria-current={page === 'home' ? 'page' : undefined}>Home</a>
       <a href={`${base}works/`} aria-current={page === 'works' ? 'page' : undefined}>Selected Works <span aria-hidden="true"><svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
       <div id="series-nav"></div>
-      <a href={`${base}about/`} aria-current={page === 'about' ? 'page' : undefined}>About & Contact</a>
+      <a href={`${base}about/`} aria-current={page === 'about' ? 'page' : undefined}>About</a>
+      <a href={`${base}contact/`} aria-current={page === 'contact' ? 'page' : undefined}>Contact</a>
     </nav>
-    <div class="sidebar-bottom"><span class="small-dot"></span> Painting & visual art<br/><span class="muted">An ongoing collection.</span></div>
   </header>
   <main id="main" tabindex="-1">
     <div id="content-status" role="status" class="content-status" hidden></div>
     <noscript><p class="content-status">Please enable JavaScript to browse the artwork and artist information.</p></noscript>
     <slot />
-    <footer><span>© {new Date().getFullYear()} <span data-artist-name>Hong</span></span><span>Works, observations, and things in between.</span><a href={`${base}about/#contact`}>Get in touch <svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></a></footer>
+    <footer><span>© {new Date().getFullYear()} <span data-artist-name>Hong Yang</span></span><span>Works, observations, and things in between.</span><a href={`${base}contact/`}>Get in touch <svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></a></footer>
   </main>
   <dialog id="artwork-dialog" aria-labelledby="lightbox-title">
     <div class="lightbox-top"><span class="eyebrow" id="lightbox-count"></span><button id="lightbox-close" aria-label="Close artwork">Close ×</button></div>
