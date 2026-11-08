@@ -21,6 +21,21 @@ is preserved. Uploading an image alone does not publish the page.
 
 ## Portfolio
 
+Portfolio opens in **Edit on page** mode: the canvas is the actual website,
+with editing enabled only inside the signed-in editor.
+
+- Click a collection name, artwork title, year, or dimensions to edit in place.
+- Press Enter or click elsewhere to finish. Esc cancels the current text edit.
+- Click an artwork image to choose a replacement image.
+- Click **Add artwork** beneath a collection to upload one or several works.
+- Use the toolbar **Add collection** button to add a new category.
+- **Save draft** and **Publish** collect any still-focused text before saving.
+
+Choose **Use forms** for collection/works ordering, descriptions, detail images,
+and fields not shown on the webpage. Choose **Edit on page** to return to the canvas.
+Home, CV, Artist Statement and About retain their simple form editors in this release.
+The controls below describe the form mode.
+
 ### Collections
 
 Click **Add collection** to create a category, or **Add existing collection** to

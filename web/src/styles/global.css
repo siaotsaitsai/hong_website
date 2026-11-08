@@ -9,3 +9,5 @@
 #home-text{white-space:pre-line;font-family:Georgia,serif;font-size:24px;line-height:1.5;max-width:650px}.home-note:has(#home-text:not([hidden])){align-items:start}.collection-heading>p{font-size:13px;color:var(--muted);max-width:650px;margin-top:15px;white-space:pre-line}.about-copy h2{white-space:pre-line}
 
 .about-layout.about-text-only{grid-template-columns:1fr;max-width:800px}
+body[data-on-page-edit] [data-edit-field]{cursor:text;outline:1px dashed transparent;outline-offset:5px;min-height:24px}body[data-on-page-edit] [data-edit-field]:hover{outline-color:#9da894}body[data-on-page-edit] [data-edit-field]:focus{outline:2px solid #536450;background:#f4f8ef}body[data-on-page-edit] .artwork-open{width:auto;min-width:95px;height:auto;border-radius:4px;padding:8px 12px;font-size:11px;opacity:1}body[data-on-page-edit] .on-page-add-work{border:1px dashed #9da894;background:white;border-radius:4px;padding:12px 20px;font-size:12px;margin:0 0 35px}body[data-on-page-edit] [data-edit-image-id]{cursor:pointer}
+body[data-on-page-edit] [data-edit-field]{outline-color:#dce3d7}

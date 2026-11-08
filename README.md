@@ -199,3 +199,22 @@ tests use the actual Sanity client against an in-process HTTP server enforcing
 references and revisions, without touching cloud content. Real member login, uploads
 and publish permissions still need account-level acceptance testing; the deployment
 token is not a content editor credential.
+
+### On-page Portfolio editing
+
+Portfolio now defaults to the full-width real website canvas. A trusted editor
+message enables plaintext editing for collection names and artwork title, year and
+dimensions. Image clicks open a file selector inside the canvas; selected Files are
+sent to the authenticated parent, which performs the upload. The iframe never gets
+a write token and does not call mutation APIs. Use forms remains available for the
+full catalog controls. Other page editors retain their existing forms for now.
+
+`shared/inlineEdits.ts` limits mutations to visible portfolio documents and explicit
+field names. Metadata, references and hidden/unrelated documents cannot be modified
+through inline text messages. The channel validates both origin and frame identity.
+The parent flushes pending canvas edits before Save/Publish and before returning to
+forms, so a focused title or dimension is not dropped. Public visitors and standalone
+preview URLs cannot enable this capability. Browser tests cover the actual iframe
+transport, user-gesture file picking, focused-text saves, cancellation, publication
+and the ordinary visitor flow; persistence still uses the member session and existing
+atomic/revision-checked gateway.

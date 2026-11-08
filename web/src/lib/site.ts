@@ -1,4 +1,6 @@
 import {escapeHtml as e, imageUrl, formatDimensions, isEmpty, loadContent, placeholder, type Artwork, type Content, type Image} from './content';
+import {createOnPageEditing} from './onPageEditing';
+const onPageEditor=createOnPageEditing();
 const menu = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
 const nav = document.querySelector<HTMLElement>('#navigation')!;
 function closeMenu() {menu.setAttribute('aria-expanded', 'false');nav.classList.remove('open');}
@@ -9,7 +11,7 @@ const dialog = document.querySelector<HTMLDialogElement>('#artwork-dialog')!;
 const largeImage = document.querySelector<HTMLImageElement>('#lightbox-image')!;
 let gallery: Artwork[] = [];let current = 0;let detailIndex = 0;
 function picture(image: Image | undefined, lazy = true) {const src = imageUrl(image);return src ? `<img src="${e(src)}" alt="${e(image?.alt || 'Artwork')}" ${lazy ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async"/>` : '<div class="missing-image">Image coming soon</div>';}
-function artworkButton(work: Artwork, lazy = true) {const index = gallery.push(work)-1;return `<button class="artwork-button" data-artwork="${index}" aria-label="View ${e(work.title)}">${picture(work.image,lazy)}<span class="artwork-open" aria-hidden="true"><svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></button>`;}
+function artworkButton(work: Artwork, lazy = true) {const index = gallery.push(work)-1;return `<button class="artwork-button" data-edit-image-id="${e(work._id)}" data-artwork="${index}" aria-label="View ${e(work.title)}">${picture(work.image,lazy)}<span class="artwork-open" aria-hidden="true"><svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></button>`;}
 function setText(selector: string, text: string) {document.querySelector(selector)!.textContent=text;}
 function showArtwork(index: number, imageIndex = 0) {
   current = (index + gallery.length) % gallery.length;detailIndex = imageIndex;
@@ -45,7 +47,7 @@ function render(content: Content, sample: boolean) {
   const home=document.querySelector('#home-artwork');
   if(home) {const homeWork=settings?.homeImage?.asset?.url ? {_id:'homepage-image',title:settings.homeCaption || '',image:settings.homeImage,description:settings.homeText} : (settings?.heroArtwork || content.artworks[0]);const featured=homeWork && settings?.homeCaption ? {...homeWork,title:settings.homeCaption} : homeWork;home.innerHTML=featured ? `<figure class="hero-figure">${artworkButton(featured,false)}<figcaption><span>${e(featured.title)} <span class="muted">${e(featured.year)}</span></span>${!sample && featured.medium ? `<span class="muted">${e(featured.medium)}</span>` : ''}</figcaption></figure>` : '<p class="empty-state">New work is on its way.</p>';}
   const works=document.querySelector('#works-content');
-  if(works) works.innerHTML=collections.length ? collections.map((col,i)=>`<section class="collection-section" id="series-${i}"><div class="collection-heading"><h2>${e(col.title)}</h2>${!sample && col.showDescription && col.description ? `<p>${e(col.description)}</p>` : ''}</div><div class="artwork-grid">${col.artworks.map(art=>`<figure>${artworkButton(art)}<figcaption><span>${e(art.title)}</span>${art.year ? `<span class="muted">${e(art.year)}</span>` : ''}<span class="muted artwork-dimensions">${e(formatDimensions(art.dimensions) || 'Dimensions to be added')}</span></figcaption></figure>`).join('') || '<p>No works in this series yet.</p>'}</div></section>`).join('') : '<p class="empty-state">New work is on its way. Please visit again soon.</p>';
+  if(works) works.innerHTML=collections.length ? collections.map((col,i)=>`<section class="collection-section" data-edit-collection-id="${e(col._id)}" id="series-${i}"><div class="collection-heading"><h2 data-edit-id="${e(col._id)}" data-edit-field="title" data-edit-value="${e(col.title)}" data-edit-label="Collection title">${e(col.title)}</h2>${!sample && col.showDescription && col.description ? `<p>${e(col.description)}</p>` : ''}</div><div class="artwork-grid">${col.artworks.map(art=>`<figure>${artworkButton(art)}<figcaption><span data-edit-id="${e(art._id)}" data-edit-field="title" data-edit-value="${e(art.title)}" data-edit-label="Artwork title">${e(art.title)}</span>${art.year ? `<span class="muted" data-edit-id="${e(art._id)}" data-edit-field="year" data-edit-value="${e(art.year)}" data-edit-label="Artwork year">${e(art.year)}</span>` : ''}<span class="muted artwork-dimensions" data-edit-id="${e(art._id)}" data-edit-field="dimensions" data-edit-value="${e(art.dimensions)}" data-edit-label="Artwork dimensions (inches by default)">${e(formatDimensions(art.dimensions) || 'Dimensions to be added')}</span></figcaption></figure>`).join('') || '<p>No works in this series yet.</p>'}</div></section>`).join('') : '<p class="empty-state">New work is on its way. Please visit again soon.</p>';
   const about=document.querySelector('#about-content');
   const statement=(content.statementPage ? (content.statementPage.body || []) : (profile?.statement || [])).filter(block=>block._type==='block').map(block=>{const tag=block.style==='h2'?'h2':'p';return `<${tag}>${(block.children || []).map(child=>{let text=e(child.text);if(child.marks?.includes('strong')) text=`<strong>${text}</strong>`;if(child.marks?.includes('em'))text=`<em>${text}</em>`;return text;}).join('')}</${tag}>`;}).join('');
   if(about) {about.innerHTML=`<div class="about-layout ${!profile?.portrait && !sample ? 'about-text-only' : ''}">${profile?.portrait || sample ? `<div class="about-image">${profile?.portrait ? picture(profile.portrait,false) : `<img src="${e(imageUrl(placeholder.artworks[1].image))}" alt="Sample abstract still life in warm colors"/>`}</div>` : ''}<div class="about-copy"><span class="eyebrow">${e(name)}</span><h2>${e(profile?.introduction || 'An ongoing practice in painting and observation.')}</h2></div></div>`; }
@@ -66,10 +68,14 @@ if(params.get('studioPreview')==='1' && previewChannel && window.parent!==window
   const status=document.querySelector<HTMLElement>('#content-status')!;
   status.hidden=false;status.textContent='Draft preview — waiting for the editor.';
   window.addEventListener('message',(event:MessageEvent)=>{
-    if(event.source!==window.parent || !previewOrigins.has(event.origin) || event.data?.type!=='portfolio:preview' || event.data?.channel!==previewChannel) return;
+    if(event.source!==window.parent || !previewOrigins.has(event.origin) || event.data?.channel!==previewChannel) return;
+    if(event.data.type==='portfolio:flush') {const edits=onPageEditor.flush();window.parent.postMessage({type:'portfolio:flushed',channel:previewChannel,requestId:event.data.requestId,edits},event.origin);return;}
+    if(event.data.type!=='portfolio:preview')return;
+    onPageEditor.configure({enabled:event.data.mode==='edit' && document.body.dataset.page==='works',busy:!!event.data.busy,origin:event.origin,channel:previewChannel});
     const content=event.data.content as Content;
     if(!content || !Array.isArray(content.artworks) || !Array.isArray(content.collections)) return;
-    render(isEmpty(content)?placeholder:content,isEmpty(content));status.textContent='Draft preview — not published.';
+    if(!onPageEditor.isActive()){const scroll=window.scrollY;render(isEmpty(content)?placeholder:content,isEmpty(content));onPageEditor.decorate();window.scrollTo(0,scroll);}
+    status.textContent=event.data.mode==='edit'?'Edit mode — click an image, title, or dimensions. Changes are drafts.':'Draft preview — not published.';
     window.parent.postMessage({type:'portfolio:rendered',channel:previewChannel},event.origin);
   });
   // A ready notification contains no content or credentials.
