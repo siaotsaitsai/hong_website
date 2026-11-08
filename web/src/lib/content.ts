@@ -4,7 +4,7 @@ export type Collection = {_id: string; title: string; description?: string; artw
 export type Profile = {name?: string; introduction?: string; portrait?: Image; statement?: {_type: string; style?: string; children?: {text: string; marks?: string[]}[]}[]; cv?: {category: string; year?: string; title: string}[]};
 export type Content = {settings: {siteTitle?: string; description?: string; heroArtwork?: Artwork; collections?: Collection[]; email?: string; instagram?: string} | null; profile: Profile | null; artworks: Artwork[]; collections: Collection[]};
 export const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const art = (id: string, title: string, file: string): Artwork => ({_id: id, title, year: '2026', medium: 'Sample composition', dimensions: ({window:'70 × 100 cm', 'still-life':'80 × 60 cm', light:'100 × 80 cm', landscape:'90 × 70 cm'} as Record<string,string>)[file], image: {alt: `${title}, an abstract composition of colored shapes`, asset: {url: `${base}art/${file}.svg`}}, description: 'A sample composition for the portfolio layout.'});
+const art = (id: string, title: string, file: string): Artwork => ({_id: id, title, year: '2026', medium: 'Sample composition', dimensions: ({window:'28 × 40 in', 'still-life':'32 × 24 in', light:'40 × 32 in', landscape:'36 × 28 in'} as Record<string,string>)[file], image: {alt: `${title}, an abstract composition of colored shapes`, asset: {url: `${base}art/${file}.svg`}}, description: 'A sample composition for the portfolio layout.'});
 const samples = [art('sample-1', 'An Open Window', 'window'), art('sample-2', 'Quiet Arrangement', 'still-life'), art('sample-3', 'Where the Light Falls', 'light'), art('sample-4', 'A Place Remembered', 'landscape')];
 export const placeholder: Content = {settings: {heroArtwork: samples[0]}, profile: {name: 'Hong Yang', introduction: 'Working between observation and imagination, I explore the quiet relationships between color, place, and memory.', statement: [{_type: 'block', children: [{text: 'This space will become a collection of paintings, studies, and the thoughts that accompany them. A place to look closely, to notice small things, and to follow a work as it unfolds.'}]}]}, artworks: samples, collections: [{_id: 'sample-color', title: 'Notes on Color', description: 'A sample collection of shapes, spaces, and everyday observations.', artworks: samples.slice(0, 2)}, {_id: 'sample-place', title: 'A Sense of Place', description: 'Studies in light and remembered landscapes.', artworks: samples.slice(2)}]};
 const imageProjection = '{alt,asset->{url}}';
@@ -29,4 +29,10 @@ export function imageUrl(image?: Image, width = 1200): string {
   const value = image?.asset?.url || '';
   if (value.startsWith(`${base}art/`) && /^[a-z-]+\.svg$/.test(value.slice(`${base}art/`.length))) return value;
   try {const url = new URL(value); if (url.protocol !== 'https:' || url.hostname !== 'cdn.sanity.io') return ''; url.searchParams.set('w', String(width));url.searchParams.set('fit','max');url.searchParams.set('auto','format');return url.href;} catch {return '';}
+}
+
+// Bare numeric dimensions use inches; preserve explicitly supplied units.
+export function formatDimensions(value?: string): string {
+  const text = value?.trim() || '';
+  return /^\d+(?:\.\d+)?(?:\s*[x×]\s*\d+(?:\.\d+)?){1,2}$/i.test(text) ? `${text} in` : text;
 }

@@ -20,14 +20,14 @@ test('empty dataset: English home, gallery, keyboard navigation, and focus retur
   expect(errors).toEqual([]);
 });
 test('published content: ordering, descriptions, details, and safe rendering', async ({page}) => {
-  const art={_id:'real',title:'A published painting',year:'2026',medium:'Oil on canvas',dimensions:'20 × 30 cm',description:'A quiet afternoon.',image:{alt:'Blue painting',asset:{url:'/art/window.svg'}},additionalImages:[{alt:'Painting detail',asset:{url:'/art/light.svg'}}]};
+  const art={_id:'real',title:'A published painting',year:'2026',medium:'Oil on canvas',dimensions:'20 × 30',description:'A quiet afternoon.',image:{alt:'Blue painting',asset:{url:'/art/window.svg'}},additionalImages:[{alt:'Painting detail',asset:{url:'/art/light.svg'}}]};
   await page.route(endpoint,async route=>{
     const url=new URL(route.request().url());expect(url.searchParams.get('perspective')).toBe('published');expect(route.request().headers()['authorization']).toBeUndefined();
     await route.fulfill({json:{result:{profile:{name:'Jane Artist',introduction:'<img src=x onerror=alert(1)>',cv:[{category:'exhibition',year:'2026',title:'A real exhibition'}],statement:[{_type:'block',children:[{text:'A published artist statement.'}]}]},settings:{heroArtwork:art,email:'artist@example.com',collections:[{_id:'b',title:'Second first',artworks:[art]},{_id:'a',title:'First second',artworks:[]}]},artworks:[art],collections:[]}}});
   });
   await page.goto('/works/');await expect(page.locator('.wordmark')).toHaveText('Jane Artist');
   await expect(page.locator('.collection-heading h2')).toHaveText(['Second first','First second']);await expect(page.locator('.placeholder-note')).toHaveCount(0);
-  await page.locator('[data-artwork]').click();await expect(page.locator('#lightbox-details')).toContainText('Oil on canvas');await page.getByRole('button',{name:'Detail 1',exact:true}).click();await expect(page.locator('#lightbox-image')).toHaveAttribute('alt','Painting detail');
+  await page.locator('[data-artwork]').click();await expect(page.locator('#lightbox-details')).toContainText('Oil on canvas');await expect(page.locator('#lightbox-details')).toContainText('20 × 30 in');await page.getByRole('button',{name:'Detail 1',exact:true}).click();await expect(page.locator('#lightbox-image')).toHaveAttribute('alt','Painting detail');
   await page.goto('/about/');await expect(page.locator('.about-copy h2')).toHaveText('<img src=x onerror=alert(1)>');await expect(page.locator('.about-copy h2 img')).toHaveCount(0);await page.getByRole('link',{name:'CV',exact:true}).click();await expect(page.locator('#cv-content')).toContainText('A real exhibition');await page.getByRole('link',{name:'Artist Statement',exact:true}).click();await expect(page.locator('#statement-content')).toContainText('A published artist statement.');
 });
 test('network failure is visible and retry recovers',async ({page})=>{

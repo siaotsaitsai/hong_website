@@ -11,7 +11,7 @@ const artwork = defineType({
     defineField({name: 'additionalImages', title: 'Details and additional views', type: 'array', of: [defineArrayMember({type: 'image', options: {hotspot: true}, fields: [defineField({name: 'alt', title: 'Image description', type: 'string', validation: (r) => r.required()})]})]}),
     defineField({name: 'year', title: 'Year', type: 'string', description: 'For example: 2026 or 2025–2026.'}),
     defineField({name: 'medium', title: 'Medium', type: 'string', description: 'For example: Oil on canvas.'}),
-    defineField({name: 'dimensions', title: 'Dimensions', type: 'string', description: 'For example: 60 × 80 cm.'}),
+    defineField({name: 'dimensions', title: 'Dimensions', type: 'string', description: 'Default unit: inches. For example: 24 × 36 in. Dimensions entered without a unit are displayed in inches. Include cm explicitly if needed.'}),
     defineField({name: 'description', title: 'Description', type: 'text', rows: 5}),
   ],
   preview: {select: {title: 'title', subtitle: 'year', media: 'image'}},

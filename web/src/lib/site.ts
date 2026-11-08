@@ -1,4 +1,4 @@
-import {escapeHtml as e, imageUrl, isEmpty, loadContent, placeholder, type Artwork, type Content, type Image} from './content';
+import {escapeHtml as e, imageUrl, formatDimensions, isEmpty, loadContent, placeholder, type Artwork, type Content, type Image} from './content';
 const menu = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
 const nav = document.querySelector<HTMLElement>('#navigation')!;
 function closeMenu() {menu.setAttribute('aria-expanded', 'false');nav.classList.remove('open');}
@@ -17,7 +17,7 @@ function showArtwork(index: number, imageIndex = 0) {
   const image = images[detailIndex] || art.image;
   document.querySelector('#image-error')!.setAttribute('hidden','');
   largeImage.src=imageUrl(image,2400);largeImage.alt=image?.alt || art.title;
-  setText('#lightbox-title',art.title);setText('#lightbox-details',[art.year,art.medium,art.dimensions].filter(Boolean).join(' · '));setText('#lightbox-description',art.description || '');
+  setText('#lightbox-title',art.title);setText('#lightbox-details',[art.year,art.medium,formatDimensions(art.dimensions)].filter(Boolean).join(' · '));setText('#lightbox-description',art.description || '');
   setText('#lightbox-count',`${current+1} / ${gallery.length}${images.length > 1 ? ` · Image ${detailIndex+1} of ${images.length}` : ''}`);
   document.querySelector('#detail-controls')?.remove();
   if (images.length > 1) {const controls=document.createElement('div');controls.id='detail-controls';controls.className='detail-controls';images.forEach((_,i)=>{const button=document.createElement('button');button.textContent=i===0?'Main image':`Detail ${i}`;button.setAttribute('aria-pressed',String(i===detailIndex));button.onclick=()=>showArtwork(current,i);controls.append(button);});document.querySelector('.lightbox-bottom')!.append(controls);}
@@ -45,7 +45,7 @@ function render(content: Content, sample: boolean) {
   const home=document.querySelector('#home-artwork');
   if(home) {const featured=settings?.heroArtwork || content.artworks[0];home.innerHTML=featured ? `<figure class="hero-figure">${artworkButton(featured,false)}<figcaption><span>${e(featured.title)} <span class="muted">${e(featured.year)}</span></span>${!sample && featured.medium ? `<span class="muted">${e(featured.medium)}</span>` : ''}</figcaption></figure>` : '<p class="empty-state">New work is on its way.</p>';}
   const works=document.querySelector('#works-content');
-  if(works) works.innerHTML=collections.length ? collections.map((col,i)=>`<section class="collection-section" id="series-${i}"><div class="collection-heading"><h2>${e(col.title)}</h2></div><div class="artwork-grid">${col.artworks.map(art=>`<figure>${artworkButton(art)}<figcaption><span>${e(art.title)}</span>${art.year ? `<span class="muted">${e(art.year)}</span>` : ''}<span class="muted artwork-dimensions">${e(art.dimensions || 'Dimensions to be added')}</span></figcaption></figure>`).join('') || '<p>No works in this series yet.</p>'}</div></section>`).join('') : '<p class="empty-state">New work is on its way. Please visit again soon.</p>';
+  if(works) works.innerHTML=collections.length ? collections.map((col,i)=>`<section class="collection-section" id="series-${i}"><div class="collection-heading"><h2>${e(col.title)}</h2></div><div class="artwork-grid">${col.artworks.map(art=>`<figure>${artworkButton(art)}<figcaption><span>${e(art.title)}</span>${art.year ? `<span class="muted">${e(art.year)}</span>` : ''}<span class="muted artwork-dimensions">${e(formatDimensions(art.dimensions) || 'Dimensions to be added')}</span></figcaption></figure>`).join('') || '<p>No works in this series yet.</p>'}</div></section>`).join('') : '<p class="empty-state">New work is on its way. Please visit again soon.</p>';
   const about=document.querySelector('#about-content');
   const statement=(profile?.statement || []).filter(block=>block._type==='block').map(block=>{const tag=block.style==='h2'?'h2':'p';return `<${tag}>${(block.children || []).map(child=>{let text=e(child.text);if(child.marks?.includes('strong')) text=`<strong>${text}</strong>`;if(child.marks?.includes('em'))text=`<em>${text}</em>`;return text;}).join('')}</${tag}>`;}).join('');
   if(about) {about.innerHTML=`<div class="about-layout"><div class="about-image">${profile?.portrait ? picture(profile.portrait,false) : `<img src="${e(imageUrl(placeholder.artworks[1].image))}" alt="Sample abstract still life in warm colors"/>`}</div><div class="about-copy"><span class="eyebrow">${e(name)}</span><h2>${e(profile?.introduction || 'An ongoing practice in painting and observation.')}</h2></div></div>`; }
