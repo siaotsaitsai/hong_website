@@ -34,7 +34,7 @@ export function snapshotFromDocuments(documents: RawDocument[]): HomeSnapshot {
 }
 export function createHomeGateway(client: SanityClient): HomeGateway {
   const api=client.withConfig({apiVersion:'2025-02-19',perspective:'raw',useCdn:false})
-  const load=async()=>snapshotFromDocuments(await api.fetch<RawDocument[]>('*[_type in $types]',{types:contentTypes}))
+  const load=async()=>snapshotFromDocuments(await api.fetch<RawDocument[]>('*[_type in $types && !(_id in path("versions.**"))]',{types:contentTypes}))
   async function save(form: HomeForm,snapshot: HomeSnapshot): Promise<HomeSnapshot> {
     const doc=homeDocument(form,snapshot.draft || snapshot.published)
     let saved: RawDocument

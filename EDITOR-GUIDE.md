@@ -1,112 +1,102 @@
 # Editing Hong Yang’s website
 
-Sign in with your invited account at:
-<https://hong-portfolio-htq7wor5.sanity.studio/>
+Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
+invited member account. The five buttons on the left match the website:
+**Home, Portfolio, CV, Artist Statement, About**. On a phone, use the top row of tabs.
 
-The left menu matches the website. Choose **Edit** to make changes and **Website
-preview** to check them. The preview includes drafts and the current unsaved form;
-it does not publish anything. Choose **Mobile width** to check a narrow layout.
-**Open published website** opens the real public page, which does not include drafts.
-Preview content is sent between the authenticated editor and its website frame;
-no content-edit token is embedded in the public website.
+Edit on the left and check the live draft preview on the right. Use **Mobile** to
+check the narrow layout. The preview is not public.
+
+- **Save draft** keeps your work for later without updating the public website.
+- **Publish** asks for confirmation, then updates the selected page.
+- Refresh the public website to see published changes.
+- Leaving with unsaved edits prompts you to save or discard them.
 
 ## Home
 
-- **Homepage image**: upload a file, or leave empty to use **Featured artwork**.
-- **Featured artwork**: select an existing work when you want the homepage to use
-  that work's image and information. Publish the artwork as well.
-- **Homepage caption**: optional title below the image. This overrides the artwork
-  title only on Home; it does not rename the actual work.
-- **Homepage text**: optional text beneath the image. Leave empty for the minimal layout.
-- **Portfolio link text**: for example, “Explore portfolio”.
-- **Site title / Site description**: browser title and search/share description.
+Upload an image, or choose an already published portfolio artwork. Set an optional
+caption and the Portfolio button label. Image descriptions are filled automatically;
+there is no manual description or homepage-body-text field. Existing stored text
+is preserved. Uploading an image alone does not publish the page.
 
 ## Portfolio
 
-1. Under **Artworks — upload or edit**, create a work. Upload its main image,
-   describe it for screen readers, and enter its title, year, medium, dimensions,
-   and description. Optional extra images appear as detail views in the artwork dialog.
-2. Generate a URL slug. Check the result, especially for non-English titles.
-3. Publish the work.
-4. Under **Collections — add or edit**, create or rename a collection. Add existing
-   artworks through the reference field, or use that field's Create option.
-   Drag the list items to change the artwork order.
-5. Add an optional collection description. Enable **Show description on website**
-   only if you want it visible below the collection title. Existing hidden descriptions
-   stay hidden until this switch is enabled.
-6. Publish the collection.
-7. Under **Collection order**, add the collections to show and drag to order them.
-   Publish the order. An explicitly empty order hides all collections.
+### Collections
 
-Dimensions default to inches: `24 × 36` displays as `24 × 36 in`.
-You can explicitly enter another unit, such as `60 × 80 cm`.
+Click **Add collection** to create a category, or **Add existing collection** to
+restore a saved one. Edit its title and optional introduction. Enable **Show
+introduction on website** if you want the text visible.
 
-An individual artwork/collection preview focuses on that item, even before you
-have added it to the published portfolio. Use the Collection order preview or
-published website to verify the final visible selection and order.
+Drag the handle or use the up/down arrows to arrange the collections. Removing a
+collection from Portfolio hides it from the selected order; it does not erase its
+stored artworks. You can add the collection back later.
+
+### Artworks
+
+Inside a collection:
+
+- **Upload artworks** accepts one or several image files and creates a card for each.
+- **Add artwork** starts a blank card. Upload its main image before publishing.
+- **Use existing artwork** adds a work already stored in the project.
+- **Edit details** opens the title, year, medium, dimensions and description.
+- **Add detail images** uploads extra views. Remove an extra view with its Remove button.
+- Drag handles or use up/down arrows to change the artwork order.
+
+Dimensions default to inches. Enter `24 × 36`, or explicitly include another unit,
+such as `60 × 80 cm`. Image descriptions and URL slugs are generated automatically;
+no manual technical fields are required.
+
+**Remove from collection** removes only that placement. The artwork document and
+its images remain stored. Editing an artwork used in several collections changes
+that work everywhere.
+
+### Publishing Portfolio
+
+**Publish Portfolio** publishes the visible collection order, those collections,
+and their artwork drafts together. It does not publish unrelated Home, CV,
+Artist Statement or About changes. Draft works outside the visible collections
+stay drafts. Revision conflicts cancel the entire publication rather than leaving
+a partially published collection.
+
+Click **Whole portfolio** to leave an individual artwork preview and see the full
+selected portfolio. A focused preview may show an item before it is publicly visible.
 
 ## CV
 
-Add exhibitions, education, residencies, and other experience. Enter the category,
-year, and title/location. Drag entries to control the display order, then publish.
+Click **Add experience**. Choose a category and enter the year and title/location.
+Drag or use arrows to arrange entries. **Remove experience** removes it from the
+current draft; the public CV changes only after publishing.
 
 ## Artist Statement
 
-Write the statement using paragraphs, headings, bold, and italic text. Publish it
-when ready. An empty published statement clears the page's statement text.
+Type directly in the text area. Enter creates a new paragraph. Select words and
+click **Bold** or **Italic**. Click within a paragraph and choose **Heading** or
+**Paragraph** to change its style. Pasted content is treated as plain text.
+An empty published statement clears the previous statement.
 
 ## About
 
-Edit the artist name, portrait, and introduction. The artist name also appears in
-the website navigation and copyright. CV and Artist Statement are edited separately.
+Edit **Artist name** and **Biography**. Upload or replace a portrait, or remove it
+to display text only. The name also appears in the public website navigation and
+copyright. CV and Artist Statement are edited independently.
 
-## Preserving earlier content
+## Image uploads
 
-Existing artwork and collection document IDs are unchanged. Older CV and statement
-fields on Artist profile, and the older collection order on Home, remain stored.
-On first creating the new CV, Artist Statement or Collection order document, the
-editor copies the corresponding earlier field into the new form. The website
-continues reading old published fields until the corresponding new page is
-published. Publishing an empty new page intentionally clears its content.
+Use JPG, PNG, WebP or GIF, up to 20 MB per file. Images are uploaded when selected;
+they do not appear on the public page until its content is published.
 
-No existing documents are deleted or automatically republished during this setup.
+## Existing content and conflicts
 
-## Publishing and checking
+Earlier CV, statement and collection ordering are copied into the editor when the
+new corresponding page document does not yet exist. Existing document IDs and
+unrelated fields are preserved. No cloud documents are deleted during setup.
 
-Sanity automatically saves drafts while you edit. Use **Website preview** before
-publishing. Publish each modified work, collection, order, or page separately;
-publishing one document does not publish its referenced documents.
+If another member changes the same content, the editor retains your inputs and
+shows an error instead of overwriting their version. Use **Reload saved version**
+to review the saved content before retrying. Explicitly empty published pages
+clear their earlier content rather than restoring the legacy fallback.
 
-After clicking **Publish**, refresh the public website:
-<https://siaotsaitsai.github.io/hong_website/>
+The editor uses your own project account. A deployment token cannot replace
+member upload/edit permissions. Never share passwords or paste tokens into the editor.
 
-Content changes do not require a GitHub code deployment. An already open website
-does not automatically refresh. Normal website visitors only receive published
-content, even if they add preview parameters to a standalone URL.
-
-If you see “Could not load preview content”, check that you accepted the project
-invitation and that your role permits reading/editing drafts. The deployment token
-cannot be used as a content editor account. Do not share passwords or tokens.
-
-## Simple Home editor (first release)
-
-Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
-existing project member account. This is a custom interface that matches the
-website, rather than the standard document editor.
-
-1. Choose **Upload an image**, or select an already published portfolio work.
-2. Add an optional caption and portfolio button label. Image descriptions are
-   generated automatically; the simple editor has no description or homepage-body-text field. Existing stored text is preserved.
-3. Check the live preview; switch to Mobile to inspect the narrow layout.
-4. Click **Save draft** to keep your work without changing the website.
-5. Click **Publish**, then **Yes, publish homepage** when you are ready.
-
-The editor warns before leaving with unsaved changes. Save and publish operations
-check document revisions; a conflict keeps your current inputs and asks you to
-reload rather than overwriting someone else's work. The existing account controls
-all read, image-upload and write permissions. No administrator token is embedded.
-
-This first release focuses on **Home**. Use **Other pages & advanced tools** for
-Portfolio, CV, Artist Statement, and About until those custom screens are added.
-The original editor remains at <https://hong-portfolio-htq7wor5.sanity.studio/structure>.
-Uploads are sent when a file is chosen; uploading alone does not publish the page.
+Advanced document tools remain available through **Advanced tools** if needed.

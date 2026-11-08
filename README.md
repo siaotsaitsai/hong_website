@@ -164,23 +164,38 @@ settings and trust the platform-supplied CA. Do not disable certificate checks.
 The live browser was separately checked against the public Sanity API. Actual
 member upload and publication testing remain separate from frontend verification.
 
-## Custom Home editor
+## Custom page editor
 
-`studio/easy/` implements the first custom page-editing screen, served at
-<https://hong-portfolio-htq7wor5.sanity.studio/edit>. It replaces the Studio layout
-for that tool route while retaining the existing authenticated project-member
-context. The standard editor is preserved at `/structure`. This reuses the current
-hosting and authentication; it is not a separate CMS or a new hosting service.
+`studio/easy/` implements the branded editor at
+<https://hong-portfolio-htq7wor5.sanity.studio/edit>. It replaces the workspace layout
+for that tool route, including managed Studio URL prefixes, while retaining the
+existing member authentication context. The standard editor remains at `/structure`.
+No separate CMS, hosting account, or administrator token is required by the browser.
 
-The UI is in `HomeEditorScreen.tsx`; the authenticated wrapper is in `HomeEditor.tsx`.
-`homeGateway.ts` handles uploads and draft/publish mutations. Draft saving leaves
-published content untouched. Publishing checks both document revisions and replaces
-the published document and deletes the draft atomically. Unrelated settings fields
-are retained. The custom screen intentionally supports Home only in this release.
+All five sections are available in the same shell: Home, Portfolio, CV,
+Artist Statement, About. Portfolio supports collection/work cards, batch and detail
+image uploads, drag handles, keyboard/mobile reorder buttons, and safe removal from
+visible collections without deleting stored artwork documents.
 
-The interaction tests use a Vite-served test harness on port 3333 and a mock gateway.
-The persistence test uses the actual Sanity client against an in-process HTTP test
-server to exercise request bodies and revision-conflict behavior without touching
-cloud content. These tests do not establish that the artist's real account has
-accepted its invitation or has upload/publish permission; that requires member
-acceptance testing after login.
+`HomeEditorScreen.tsx` and `homeGateway.ts` handle Home. `PageEditorScreen.tsx` and
+`pageGateway.ts` handle the other sections. `RichTextEditor.tsx` supports the Portable
+Text paragraph, heading, bold and italic subset used by the public renderer. Existing
+content is retained until edited, and HTML paste is reduced to plain text.
+
+Draft batches weaken references to unpublished documents. Portfolio publication
+strengthens references and publishes the visible collection graph atomically. Both
+draft and published revisions are checked; a conflict rolls back the entire batch.
+Saving drafts retains the original published revision guards until reload, rather
+than accepting a concurrent published change without review. Images and documents
+removed from a visible collection are retained in storage. Content-release documents
+under `versions.*` are excluded from the custom editor’s normal editing scope.
+
+Legacy CV, Statement and ordering values initialize the corresponding new editor
+models without a migration write. Publishing an empty new page intentionally clears
+its content. About edits preserve legacy fields while allowing portrait removal.
+
+Interaction tests use a Vite harness on port 3333 and a mocked gateway. Persistence
+tests use the actual Sanity client against an in-process HTTP server enforcing
+references and revisions, without touching cloud content. Real member login, uploads
+and publish permissions still need account-level acceptance testing; the deployment
+token is not a content editor credential.

@@ -12,7 +12,7 @@ test('editor fields control Home, Portfolio, CV, Artist Statement, and About ind
   await expect(page.locator('#home-text')).toHaveText('An editable line.\nAnother line.')
   await expect(page.getByRole('link',{name:'View paintings'})).toBeVisible()
   await page.getByRole('link',{name:'Portfolio',exact:true}).click()
-  await expect(page.locator('.collection-heading h2')).toHaveText('New Series')
+  await expect(page.locator('.collection-heading h2')).toHaveText(['New Series'])
   await expect(page.locator('.collection-heading')).toContainText('A real collection introduction.')
   await expect(page.locator('.artwork-dimensions')).toHaveText('24 × 36 in')
   await page.getByRole('link',{name:'CV',exact:true}).click()

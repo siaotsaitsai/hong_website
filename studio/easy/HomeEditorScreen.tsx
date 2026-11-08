@@ -1,6 +1,7 @@
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react'
 import {resolvePreview,type RawDocument} from '../../shared/previewContent'
 import {createHomeGateway,homeDocument,validateHome,type HomeForm,type HomeGateway,type HomeSnapshot} from './homeGateway'
+import {EditorNav,type EditorPage} from './EditorNav'
 import './editor.css'
 
 function Arrow(){return <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" strokeWidth="1.2"/></svg>}
@@ -13,7 +14,7 @@ function errorMessage(error: unknown) {
   if(status===401||status===403) return 'Your account cannot make this change. Check your project invitation and editing permissions.'
   return error instanceof Error ? error.message : 'Something went wrong. Your edits are still here. Please try again.'
 }
-export function HomeEditorScreen({gateway,userName='Artist',previewUrl=website}: {gateway:HomeGateway;userName?:string;previewUrl?:string}) {
+export function HomeEditorScreen({gateway,userName='Artist',previewUrl=website,onNavigate}: {gateway:HomeGateway;userName?:string;previewUrl?:string;onNavigate?:(page:EditorPage)=>void}) {
   const [snapshot,setSnapshot]=useState<HomeSnapshot|null>(null)
   const [form,setForm]=useState<HomeForm|null>(null)
   const [savedForm,setSavedForm]=useState('')
@@ -60,8 +61,9 @@ export function HomeEditorScreen({gateway,userName='Artist',previewUrl=website}:
   const works=(snapshot?.documents || []).filter(doc=>doc._type==='artwork'&&!doc._id.startsWith('drafts.'))
   return <div className="easy-editor">
     <header className="easy-header"><a href={website} target="_blank" rel="noopener noreferrer" className="easy-brand">Hong Yang</a><span>YOUR WEBSITE EDITOR</span><a href={website} target="_blank" rel="noopener noreferrer">View website <Arrow/></a></header>
+    {onNavigate&&<EditorNav active="home" mobile onNavigate={next=>{if(!busy&&(!dirty||window.confirm('Leave this page without saving your changes?')))onNavigate(next)}}/>}
     <div className="easy-shell">
-      <aside className="easy-sidebar"><span className="easy-kicker">EDIT YOUR WEBSITE</span><strong>Home</strong><p>Change a picture.<br/>Tell your story.</p><a href={`${studio}/structure`} target="_blank" rel="noopener noreferrer">Other pages & advanced tools <Arrow/></a><small>Signed in as {userName}</small></aside>
+      <aside className="easy-sidebar"><span className="easy-kicker">EDIT YOUR WEBSITE</span>{onNavigate?<EditorNav active="home" onNavigate={next=>{if(!busy&&(!dirty||window.confirm('Leave this page without saving your changes?')))onNavigate(next)}}/>:<strong>Home</strong>}<a href={`${studio}/structure`} target="_blank" rel="noopener noreferrer">Advanced tools <Arrow/></a><small>Signed in as {userName}</small></aside>
       <main className="easy-main">
         <div className="easy-heading"><div><span className="easy-kicker">HOME</span><h1>Make it yours.</h1><p>Your changes stay private until you publish.</p></div><span className={`easy-status ${dirty?'is-dirty':''}`}>{busy || (dirty?'Unsaved changes':snapshot?.draft?'Draft saved':'Up to date')}</span></div>
         {error&&<div className="easy-alert" role="alert">{error}<button type="button" disabled={!!busy} onClick={()=>{if(!dirty||window.confirm('Reload the saved version? Unsaved edits on this screen will be lost.'))void load()}}>Reload saved version</button></div>}
