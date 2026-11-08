@@ -60,32 +60,34 @@ Studio commands use the explicit `studio:` prefix; `deploy` remains a Studio
 command for compatibility. Use a writable `XDG_CONFIG_HOME` for Sanity commands
 in this cloud environment too, such as `/tmp/hong-sanity-config`.
 
-## Content editing
+## Content editing and draft preview
 
-Use your own invited Sanity account to sign in to the Studio. No shared passwords.
+See [EDITOR-GUIDE.md](EDITOR-GUIDE.md) for the step-by-step guide.
+The Studio has five top-level entries: Home, Portfolio, CV, Artist Statement, About.
+Portfolio contains collection ordering, collections and artworks. Home supports a
+standalone uploaded image or an artwork reference, caption, body text and link label.
 
-1. **Artworks**: upload a main image and optional detail images. Add a title,
-   image description, year, medium, dimensions, and description. Generate the URL
-   slug; check non-Latin titles or enter a short English slug manually. Publish.
-2. **Collections**: add references to published artworks and drag to sort. Publish.
-3. **Artist profile**: edit the artist name, portrait, introduction, statement,
-   exhibitions, education, and residencies. Publish.
-4. **Home & contact**: select the featured artwork, choose and order visible
-   collections, and add a public email and Instagram URL. Publish.
+CV (`cvPage`) and Artist Statement (`statementPage`) are independent singleton
+documents. About preserves the existing `artistProfile` ID. Collection ordering
+uses `portfolioSettings`. Legacy profile CV/statement and siteSettings collections
+are preserved as fallbacks until the corresponding new documents are published.
+Initial-value resolvers copy legacy values into the new editor forms; empty newly
+published pages intentionally override old content. No migration writes or deletes
+are performed by deployment.
 
-Only references to published works appear publicly. The public site respects
-collection and artwork ordering. If no collection order is configured, collections
-are sorted by title; works without any collections can appear in Collected Works.
-An explicitly empty collection order hides the collection list. Artist profile
-and Home & contact are singleton documents; the Studio hides duplicate/delete/
-unpublish actions for these to prevent accidental edits. This is UI protection,
-not an authorization boundary.
+Every document provides Edit and Website preview views. The authenticated Studio
+loads draft documents with the member's own session, overlays the current form,
+and resolves references in memory. It sends the rendered content model to the
+website iframe with an exact target origin. The website only accepts messages from
+its parent, from allowlisted Studio origins, with the matching per-view channel.
+A standalone URL cannot activate draft access. The public API query remains
+`perspective=published`, and no token is transmitted to the iframe.
 
-The Studio schemas and labels are English. Existing stored content is not translated
-automatically. The frontend preserves English defaults until real content is provided.
-Invite the artist through Sanity Manage → Members, using the least privileged
-available role that allows content editing and publishing. Token-based deployment
-does not validate an invited member's acceptance or permissions.
+Both Studio and frontend must be deployed for this preview to work. Individual
+artwork/collection previews focus on the current item; the Portfolio order preview
+represents the selected portfolio. Invited-member authentication, image upload and
+publish operations need a real member-session acceptance test, separate from the
+automated schema, normalization and browser bridge tests.
 
 ## Configuration
 

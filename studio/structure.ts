@@ -1,18 +1,26 @@
 import {ImagesIcon, UserIcon, CogIcon} from '@sanity/icons'
-import type {StructureResolver} from 'sanity/structure'
+import type {DefaultDocumentNodeResolver, StructureResolver} from 'sanity/structure'
+import {WebsitePreview} from './WebsitePreview'
 
-export const singletonTypes = new Set(['artistProfile', 'siteSettings'])
+export const singletonTypes = new Set(['artistProfile', 'siteSettings', 'portfolioSettings', 'cvPage', 'statementPage'])
+export const defaultDocumentNode: DefaultDocumentNodeResolver = (S) => S.document().views([
+  S.view.form().title('Edit'),
+  S.view.component(WebsitePreview).title('Website preview'),
+])
 
-export const structure: StructureResolver = (S) => S.list()
-  .title('Content')
-  .items([
-    S.documentTypeListItem('artwork').title('Artworks').icon(ImagesIcon),
-    S.documentTypeListItem('collection').title('Collections'),
-    S.divider(),
-    S.listItem().title('Artist profile').icon(UserIcon).child(
-      S.document().schemaType('artistProfile').documentId('artistProfile').title('Artist profile'),
-    ),
-    S.listItem().title('Home & contact').icon(CogIcon).child(
-      S.document().schemaType('siteSettings').documentId('siteSettings').title('Home & contact'),
-    ),
+export const structure: StructureResolver = (S) => {
+  const singleton = (title: string, type: string, id = type) => S.listItem().title(title).child(
+    S.document().schemaType(type).documentId(id).title(title).views([S.view.form().title('Edit'), S.view.component(WebsitePreview).title('Website preview')]),
+  )
+  return S.list().title('Website').items([
+    singleton('Home', 'siteSettings').icon(CogIcon),
+    S.listItem().title('Portfolio').icon(ImagesIcon).child(S.list().title('Portfolio').items([
+      singleton('Collection order', 'portfolioSettings'),
+      S.documentTypeListItem('collection').title('Collections — add or edit'),
+      S.documentTypeListItem('artwork').title('Artworks — upload or edit'),
+    ])),
+    singleton('CV', 'cvPage'),
+    singleton('Artist Statement', 'statementPage'),
+    singleton('About', 'artistProfile').icon(UserIcon),
   ])
+}
