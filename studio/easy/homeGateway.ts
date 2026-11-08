@@ -1,3 +1,4 @@
+import {uploadImage} from './uploadImage'
 import type {SanityClient} from 'sanity'
 import type {RawDocument} from '../../shared/previewContent'
 
@@ -52,7 +53,7 @@ export function createHomeGateway(client: SanityClient): HomeGateway {
   }
   return {
     load,
-    async upload(file) {const asset=await api.assets.upload('image',file,{filename:file.name});return {reference:asset._id,url:asset.url}},
+    async upload(file) {return uploadImage(api,file)},
     save,
     async publish(form,snapshot) {
       const problem=validateHome(form,snapshot);if(problem) throw new Error(problem)

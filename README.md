@@ -227,3 +227,10 @@ restricts every Studio layout, including advanced tools, to the two verified own
 user IDs. Project membership must continue to contain only the approved human users;
 the interface allowlist is not a substitute for server-side membership permissions.
 No owner email addresses or credentials are embedded in the site.
+
+Image uploads use `uploadImage.ts` and the client's authenticated `request` pipeline.
+In a managed Studio, its request handler bridges requests to the host. The SDK's
+browser `assets.upload` XHR path bypasses this handler and can fail with an XHR
+network error. The shared upload helper preserves the current member session,
+passes the original File bytes and MIME type, and keeps API permission errors.
+Browser regression tests cover the host bridge and both gateway upload paths.

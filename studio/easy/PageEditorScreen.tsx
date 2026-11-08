@@ -101,7 +101,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
    if(!files?.length)return
    const selected=Array.from(files)
    if(selected.some(file=>!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)||file.size>20*1024*1024)){setError('Choose JPG, PNG, WebP, or GIF files smaller than 20 MB each.');return}
-   setBusy('Uploading');setError('')
+   setBusy('Uploading');setError('');setNotice('')
    let completed=0
    try{for(const file of selected){
      setBusy(`Uploading ${completed+1} of ${selected.length}`)

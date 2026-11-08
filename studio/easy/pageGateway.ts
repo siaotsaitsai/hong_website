@@ -1,3 +1,4 @@
+import {uploadImage} from './uploadImage'
 import type {SanityClient} from 'sanity'
 import type {RawDocument} from '../../shared/previewContent'
 import {contentTypes} from './homeGateway'
@@ -78,7 +79,7 @@ export function createPageGateway(client:SanityClient):PageGateway {
  const load=async(page:PageName)=>pageSnapshot(page,await api.fetch<RawDocument[]>('*[_type in $types && !(_id in path("versions.**"))]',{types:contentTypes}))
  return {
    load,
-   async upload(file){const asset=await api.assets.upload('image',file,{filename:file.name});return {reference:asset._id,url:asset.url}},
+   async upload(file){return uploadImage(api,file)},
    async save(model,snapshot){
      const originals=effective(snapshot.documents)
      const ids=snapshot.page==='portfolio'?Object.keys(model).filter(id=>['portfolioSettings','collection','artwork'].includes(model[id]._type)):[rootIds[snapshot.page]]
