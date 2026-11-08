@@ -1,7 +1,7 @@
 # Hong — Artist Portfolio
 
 An English-language artist portfolio built with Astro and Sanity Studio.
-The website uses a warm paper palette, a persistent desktop navigation, responsive
+The website uses a white background, a persistent desktop navigation, responsive
 mobile navigation, collection galleries, and an accessible artwork dialog.
 
 ## Website and Studio
@@ -65,7 +65,7 @@ in this cloud environment too, such as `/tmp/hong-sanity-config`.
 See [EDITOR-GUIDE.md](EDITOR-GUIDE.md) for the step-by-step guide.
 The Studio has five top-level entries: Home, Portfolio, CV, Artist Statement, About.
 Portfolio contains collection ordering, collections and artworks. Home supports a
-standalone uploaded image or an artwork reference, caption, body text and link label.
+standalone uploaded image or an artwork reference, caption and link label.
 
 CV (`cvPage`) and Artist Statement (`statementPage`) are independent singleton
 documents. About preserves the existing `artistProfile` ID. Collection ordering
@@ -177,8 +177,8 @@ Artist Statement, About. Portfolio supports collection/work cards, batch and det
 image uploads, drag handles, keyboard/mobile reorder buttons, and safe removal from
 visible collections without deleting stored artwork documents.
 
-`HomeEditorScreen.tsx` and `homeGateway.ts` handle Home. `PageEditorScreen.tsx` and
-`pageGateway.ts` handle the other sections. `RichTextEditor.tsx` supports the Portable
+`PageEditorScreen.tsx` and `pageGateway.ts` handle all five sections. The earlier
+Home editor and gateway remain for compatibility tests. `RichTextEditor.tsx` supports the Portable
 Text paragraph, heading, bold and italic subset used by the public renderer. Existing
 content is retained until edited, and HTML paste is reduced to plain text.
 
@@ -200,17 +200,19 @@ references and revisions, without touching cloud content. Real member login, upl
 and publish permissions still need account-level acceptance testing; the deployment
 token is not a content editor credential.
 
-### On-page Portfolio editing
+### On-page editing and owner access
 
-Portfolio now defaults to the full-width real website canvas. A trusted editor
+All five sections default to the full-width real website canvas. A trusted editor
 message enables plaintext editing for collection names and artwork title, year and
 dimensions. Image clicks open a file selector inside the canvas; selected Files are
 sent to the authenticated parent, which performs the upload. The iframe never gets
 a write token and does not call mutation APIs. Use forms remains available for the
-full catalog controls. Other page editors retain their existing forms for now.
+full catalog controls. Home supports image/caption/link edits; CV supports keyed
+entries, categories and ordering; Artist Statement supports rich text; About supports
+name, biography and portrait edits.
 
-`shared/inlineEdits.ts` limits mutations to visible portfolio documents and explicit
-field names. Metadata, references and hidden/unrelated documents cannot be modified
+`shared/inlineEdits.ts` limits mutations to explicit page-scoped fields, visible
+portfolio documents and keyed CV entries. Metadata, references and hidden/unrelated documents cannot be modified
 through inline text messages. The channel validates both origin and frame identity.
 The parent flushes pending canvas edits before Save/Publish and before returning to
 forms, so a focused title or dimension is not dropped. Public visitors and standalone
@@ -218,3 +220,10 @@ preview URLs cannot enable this capability. Browser tests cover the actual ifram
 transport, user-gesture file picking, focused-text saves, cancellation, publication
 and the ordinary visitor flow; persistence still uses the member session and existing
 atomic/revision-checked gateway.
+
+The footer’s **Edit website** link opens the editor for the current page. Sanity
+authentication and project membership enforce API access. `editorAccess.ts` additionally
+restricts every Studio layout, including advanced tools, to the two verified owner
+user IDs. Project membership must continue to contain only the approved human users;
+the interface allowlist is not a substitute for server-side membership permissions.
+No owner email addresses or credentials are embedded in the site.

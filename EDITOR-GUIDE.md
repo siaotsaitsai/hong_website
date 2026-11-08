@@ -1,11 +1,13 @@
 # Editing Hong Yang’s website
 
 Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
-invited member account. The five buttons on the left match the website:
+approved owner account. You can also use **Edit website** in the website footer.
+Only the two approved owner accounts can enter; public visitors cannot edit. The five buttons on the left match the website:
 **Home, Portfolio, CV, Artist Statement, About**. On a phone, use the top row of tabs.
 
-Edit on the left and check the live draft preview on the right. Use **Mobile** to
-check the narrow layout. The preview is not public.
+All five pages open in **Edit on page** mode. Click the actual images and text to
+change them. Use **Mobile** to check the narrow layout, or **Use forms** for extra
+controls. The draft preview is not public.
 
 - **Save draft** keeps your work for later without updating the public website.
 - **Publish** asks for confirmation, then updates the selected page.
@@ -14,8 +16,8 @@ check the narrow layout. The preview is not public.
 
 ## Home
 
-Upload an image, or choose an already published portfolio artwork. Set an optional
-caption and the Portfolio button label. Image descriptions are filled automatically;
+Click the homepage image to replace it, and click its caption or the Portfolio
+button label to change the text. Image descriptions are filled automatically;
 there is no manual description or homepage-body-text field. Existing stored text
 is preserved. Uploading an image alone does not publish the page.
 
@@ -33,8 +35,7 @@ with editing enabled only inside the signed-in editor.
 
 Choose **Use forms** for collection/works ordering, descriptions, detail images,
 and fields not shown on the webpage. Choose **Edit on page** to return to the canvas.
-Home, CV, Artist Statement and About retain their simple form editors in this release.
-The controls below describe the form mode.
+The controls below describe the additional form mode.
 
 ### Collections
 
@@ -79,8 +80,8 @@ selected portfolio. A focused preview may show an item before it is publicly vis
 
 ## CV
 
-Click **Add experience**. Choose a category and enter the year and title/location.
-Drag or use arrows to arrange entries. **Remove experience** removes it from the
+Click **Add experience**, then click the year and title/location directly on the
+page. Choose a category from its dropdown. Use arrows to arrange entries. **Remove experience** removes it from the
 current draft; the public CV changes only after publishing.
 
 ## Artist Statement
@@ -92,8 +93,9 @@ An empty published statement clears the previous statement.
 
 ## About
 
-Edit **Artist name** and **Biography**. Upload or replace a portrait, or remove it
-to display text only. The name also appears in the public website navigation and
+Click the artist name and biography to edit them directly. Enter adds a biography
+line; Ctrl/Cmd+Enter finishes editing. Click the portrait to replace it, or use the
+upload button if no portrait exists. **Use forms** also supports portrait removal. The name also appears in the public website navigation and
 copyright. CV and Artist Statement are edited independently.
 
 ## Image uploads

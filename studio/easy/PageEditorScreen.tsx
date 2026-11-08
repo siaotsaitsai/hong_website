@@ -7,11 +7,11 @@ import {reference,references,rootIds,validatePage,type DocumentModel,type PageGa
 import './editor.css'
 const website='https://siaotsaitsai.github.io/hong_website/'
 const studio='https://hong-portfolio-htq7wor5.sanity.studio'
-const routes:Record<PageName,string>={portfolio:'works/',cv:'cv/',statement:'artist-statement/',about:'about/'}
+const routes:Record<PageName,string>={home:'',portfolio:'works/',cv:'cv/',statement:'artist-statement/',about:'about/'}
 const list=<T,>(value:unknown):T[]=>Array.isArray(value)?value:[]
 const move=<T,>(items:T[],from:number,to:number):T[]=>{if(from<0||to<0||to>=items.length)return items;const next=[...items];next.splice(to,0,next.splice(from,1)[0]);return next}
 function message(error:unknown){const status=(error as {statusCode?:number})?.statusCode;return status===409?'Another editor changed this content. Reload the saved version before trying again. Your current edits are still here.':status===401||status===403?'Your account cannot make this change. Check the project invitation and editing permissions.':error instanceof Error?error.message:'Could not complete the action. Your edits are still here.'}
-export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',previewBase=website,initialVisual=page==='portfolio'}:{page:PageName;gateway:PageGateway;onNavigate:(page:EditorPage)=>void;userName?:string;previewBase?:string;initialVisual?:boolean}){
+export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',previewBase=website,initialVisual=true}:{page:PageName;gateway:PageGateway;onNavigate:(page:EditorPage)=>void;userName?:string;previewBase?:string;initialVisual?:boolean}){
  const [visual,setVisual]=useState(initialVisual)
  const [inlinePending,setInlinePending]=useState(false)
  const modelRef=useRef<DocumentModel>({})
@@ -46,20 +46,27 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
      const data=event.data
      if(data.type==='portfolio:ready')send()
      if(data.type==='portfolio:rendered')setConnected(true)
-     if(page!=='portfolio'||!visual)return
+     if(!visual)return
      try{
        if(data.type==='portfolio:pending')setInlinePending(data.pending===true)
-       if(data.type==='portfolio:edit'){const next=applyInlineEdits(modelRef.current,data.edits);modelRef.current=next;setModel(next);setInlinePending(false);setConfirmation(false);setNotice('')}
+       if(data.type==='portfolio:edit'){const next=applyInlineEdits(modelRef.current,data.edits,page);modelRef.current=next;setModel(next);setInlinePending(false);setConfirmation(false);setNotice('')}
        if(data.type==='portfolio:flushed'){
          const request=flushRequests.current.get(data.requestId);if(!request)return
-         const next=applyInlineEdits(modelRef.current,data.edits);modelRef.current=next;setModel(next);setInlinePending(false);clearTimeout(request.timer);flushRequests.current.delete(data.requestId);request.resolve(next)
+         const next=applyInlineEdits(modelRef.current,data.edits,page);modelRef.current=next;setModel(next);setInlinePending(false);clearTimeout(request.timer);flushRequests.current.delete(data.requestId);request.resolve(next)
        }
        if(data.type==='portfolio:upload'&&!busy){
          const current=modelRef.current;const visible=references(current[root]?.collections)
          const workIds=visible.flatMap(id=>references(current[id]?.artworks))
          if(!Array.isArray(data.files)||!data.files.length||data.files.some((file:unknown)=>!(file instanceof File)))return
-         if(data.field==='image'&&workIds.includes(data.id))void upload(data.files,data.id,'image')
-         if(data.field==='newWorks'&&visible.includes(data.id))void upload(data.files,data.id,'newWorks')
+         if(data.field==='image'&&page==='portfolio'&&workIds.includes(data.id))void upload(data.files,data.id,'image')
+         if(data.field==='newWorks'&&page==='portfolio'&&visible.includes(data.id))void upload(data.files,data.id,'newWorks')
+         if(data.field==='portrait'&&page==='about'&&data.id==='artistProfile')void upload(data.files,data.id,'portrait')
+         if(data.field==='homeImage'&&page==='home'&&data.id==='siteSettings')void upload(data.files,data.id,'homeImage')
+       }
+       if(data.type==='portfolio:action'&&page==='cv'&&!busy){
+         const entries=list<Record<string,unknown>>(modelRef.current[root].entries)
+         if(data.action==='add-cv')change(root,{entries:[...entries,{_key:crypto.randomUUID(),_type:'cvEntry',category:'exhibition',year:'',title:'New experience'}]})
+         else{const index=entries.findIndex((entry,i)=>String(entry._key??i)===data.key);if(index>=0){if(data.action==='remove-cv')change(root,{entries:entries.filter((_,i)=>i!==index)});if(data.action==='up-cv')change(root,{entries:move(entries,index,index-1)});if(data.action==='down-cv')change(root,{entries:move(entries,index,index+1)})}}
        }
        if(data.type==='portfolio:navigate'&&editorPages.some(([id])=>id===data.page))navigate(data.page)
      }catch(err){setError(message(err));const request=flushRequests.current.get(data.requestId);if(request){clearTimeout(request.timer);flushRequests.current.delete(data.requestId);request.reject(err instanceof Error?err:new Error(message(err)))}}
@@ -90,7 +97,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
    const nextId=id||`artwork-${crypto.randomUUID()}`
    updateModel(current=>({...current,...(!id?{[nextId]:{_id:nextId,_type:'artwork',title:'Untitled work',year:'',medium:'',dimensions:'',description:''}}:{}),[collectionId]:{...current[collectionId],artworks:[...list(current[collectionId].artworks),reference(nextId)]}}));changed();setExpanded(nextId);setFocus(nextId)
  }
- async function upload(files:FileList|File[]|null,id:string,key:'image'|'portrait'|'additionalImages'|'newWorks'){
+ async function upload(files:FileList|File[]|null,id:string,key:'image'|'portrait'|'homeImage'|'additionalImages'|'newWorks'){
    if(!files?.length)return
    const selected=Array.from(files)
    if(selected.some(file=>!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)||file.size>20*1024*1024)){setError('Choose JPG, PNG, WebP, or GIF files smaller than 20 MB each.');return}
@@ -119,7 +126,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
    try{const saved=await gateway.save(current,snapshot);apply(saved);if(publish){const published=await gateway.publish(saved);apply(published)}setNotice(publish?`${title} published. Refresh the website to see the update.`:'Draft saved. Your public website has not changed.')}catch(err){setError(message(err));setConfirmation(false)}finally{setBusy('')}
  }
  function field(id:string,key:string,label:string,multiline=false){return <label className="easy-field">{label}{multiline?<textarea rows={4} value={String(model[id]?.[key]||'')} onChange={event=>change(id,{[key]:event.target.value})}/>:<input value={String(model[id]?.[key]||'')} onChange={event=>change(id,{[key]:event.target.value})}/>}</label>}
- function uploadControl(id:string,key:'image'|'portrait'|'additionalImages'|'newWorks',label:string,multiple=false){return <label className="easy-file-button">{label}<input aria-label={label} disabled={!!busy} type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple={multiple} onChange={event=>{void upload(event.target.files,id,key);event.target.value=''}}/></label>}
+ function uploadControl(id:string,key:'image'|'portrait'|'homeImage'|'additionalImages'|'newWorks',label:string,multiple=false){return <label className="easy-file-button">{label}<input aria-label={label} disabled={!!busy} type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple={multiple} onChange={event=>{void upload(event.target.files,id,key);event.target.value=''}}/></label>}
  function artworkCard(id:string,index:number,collectionId:string,total:number){
    const doc=model[id]
    if(!doc)return <p key={id}>Missing artwork. <button type="button" onClick={()=>change(collectionId,{artworks:list<{_ref:string}>(model[collectionId].artworks).filter(ref=>ref._ref!==id)})}>Remove missing reference</button></p>
@@ -145,10 +152,11 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
    <EditorNav active={page} onNavigate={navigate} mobile/>
    <div className="easy-shell"><aside className="easy-sidebar"><span className="easy-kicker">EDIT YOUR WEBSITE</span><EditorNav active={page} onNavigate={navigate}/><a href={`${studio}/structure`} target="_blank" rel="noopener noreferrer">Advanced tools</a><small>Signed in as {userName}</small></aside>
      <main className="easy-main">
-       <div className="easy-heading"><div><span className="easy-kicker">YOUR WEBSITE</span><h1>{title}</h1><p>{page==='portfolio'?'Arrange collections, upload work, and tell the story behind each piece.':'Edit here. Preview on the right. Publish when you are ready.'}</p></div>{page==='portfolio'&&<div className="easy-visual-toolbar"><button type="button" disabled={!!busy} onClick={()=>void toggleVisual()}>{visual?'Use forms':'Edit on page'}</button>{visual&&<><button type="button" disabled={!!busy||!snapshot} onClick={()=>addCollection()}>Add collection</button><button type="button" onClick={()=>setMobile(!mobile)}>{mobile?'Desktop view':'Mobile view'}</button></>}</div>}<span className={`easy-status ${dirty?'is-dirty':''}`}>{busy||(dirty?'Unsaved changes':snapshot?.documents.some(doc=>doc._id===`drafts.${root}`)?'Draft saved':'Up to date')}</span></div>
+       <div className="easy-heading"><div><span className="easy-kicker">YOUR WEBSITE</span><h1>{title}</h1><p>{page==='portfolio'?'Arrange collections, upload work, and tell the story behind each piece.':'Edit here. Preview on the right. Publish when you are ready.'}</p></div>{<div className="easy-visual-toolbar"><button type="button" disabled={!!busy} onClick={()=>void toggleVisual()}>{visual?'Use forms':'Edit on page'}</button>{visual&&<>{page==='portfolio'&&<button type="button" disabled={!!busy||!snapshot} onClick={()=>addCollection()}>Add collection</button>}<button type="button" onClick={()=>setMobile(!mobile)}>{mobile?'Desktop view':'Mobile view'}</button></>}</div>}<span className={`easy-status ${dirty?'is-dirty':''}`}>{busy||(dirty?'Unsaved changes':snapshot?.documents.some(doc=>doc._id===`drafts.${root}`)?'Draft saved':'Up to date')}</span></div>
        {error&&<div role="alert" className="easy-alert">{error}<button type="button" disabled={!!busy} onClick={()=>{if(!dirty||window.confirm('Reload the saved version? Your unsaved edits will be lost.'))void load()}}>Reload saved version</button></div>}
        {notice&&<p role="status" className="easy-notice">{notice}</p>}
        {!snapshot?<p className="easy-loading">{busy?'Loading your content…':'Could not load this page. Please try Reload saved version.'}</p>:<div className={`easy-columns ${page==='portfolio'?'easy-portfolio-columns':''}`}><section className="easy-form" aria-label={`${title} content`}><fieldset disabled={!!busy}>
+         {page==='home'&&<>{field(root,'homeCaption','Caption')}<div className="easy-portrait">{imageUrl(model[root].homeImage)&&<img src={imageUrl(model[root].homeImage)} alt="Homepage image"/>}{uploadControl(root,'homeImage','Upload homepage image')}{!!model[root].homeImage&&<button type="button" onClick={()=>change(root,{homeImage:undefined,heroArtwork:undefined})}>Remove homepage image</button>}</div>{field(root,'portfolioLinkLabel','Portfolio button text')}</>}
          {page==='portfolio'&&<>
            <div className="easy-toolbar"><button type="button" onClick={()=>addCollection()}>Add collection</button>{hiddenCollections.length>0&&<label>Add existing collection<select aria-label="Add existing collection" value="" onChange={event=>{if(event.target.value)addCollection(event.target.value)}}><option value="">Choose a collection</option>{hiddenCollections.map(doc=><option key={doc._id} value={doc._id}>{String(doc.title)}</option>)}</select></label>}</div>
            <p className="easy-help">Drag handles or use the arrows to sort. Publishing updates the visible collections and their artworks together.</p>

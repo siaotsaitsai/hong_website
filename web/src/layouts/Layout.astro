@@ -31,7 +31,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <div id="content-status" role="status" class="content-status" hidden></div>
     <noscript><p class="content-status">Please enable JavaScript to browse the artwork and artist information.</p></noscript>
     <slot />
-    <footer><span>© {new Date().getFullYear()} <span data-artist-name>Hong Yang</span></span></footer>
+    <footer><span>© {new Date().getFullYear()} <span data-artist-name>Hong Yang</span></span><a class="editor-entry" href={`https://hong-portfolio-htq7wor5.sanity.studio/edit?editorPage=${page==='works'?'portfolio':page}`} target="_blank" rel="noopener noreferrer">Edit website</a></footer>
   </main>
   <dialog id="artwork-dialog" aria-labelledby="lightbox-title">
     <div class="lightbox-top"><span class="eyebrow" id="lightbox-count"></span><button id="lightbox-close" aria-label="Close artwork">Close ×</button></div>

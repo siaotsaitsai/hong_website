@@ -2,7 +2,7 @@ import type {SanityClient} from 'sanity'
 import type {RawDocument} from '../../shared/previewContent'
 import {contentTypes} from './homeGateway'
 
-export type PageName='portfolio'|'cv'|'statement'|'about'
+export type PageName='home'|'portfolio'|'cv'|'statement'|'about'
 export type DocumentModel=Record<string,RawDocument>
 export type PageSnapshot={page:PageName;documents:RawDocument[];model:DocumentModel}
 export interface PageGateway {
@@ -11,7 +11,7 @@ export interface PageGateway {
  save(model:DocumentModel,snapshot:PageSnapshot):Promise<PageSnapshot>
  publish(snapshot:PageSnapshot):Promise<PageSnapshot>
 }
-export const rootIds:Record<PageName,string>={portfolio:'portfolioSettings',cv:'cvPage',statement:'statementPage',about:'artistProfile'}
+export const rootIds:Record<PageName,string>={home:'siteSettings',portfolio:'portfolioSettings',cv:'cvPage',statement:'statementPage',about:'artistProfile'}
 export const canonical=(id:string)=>id.replace(/^drafts\./,'')
 export const fields=(doc:RawDocument)=>Object.fromEntries(Object.entries(doc).filter(([key,value])=>!key.startsWith('_')&&value!==undefined))
 export const references=(value:unknown):string[]=>Array.isArray(value)?value.map(item=>String(item?._ref||'')).filter(Boolean).map(canonical):[]
@@ -25,6 +25,7 @@ export function pageSnapshot(page:PageName,documents:RawDocument[]):PageSnapshot
  const model=effective(documents)
  const root=rootIds[page]
  if(!model[root]){
+   if(page==='home')model[root]={_id:root,_type:root,siteTitle:'Hong Yang',homeCaption:'',portfolioLinkLabel:'Explore portfolio'}
    if(page==='portfolio')model[root]={_id:root,_type:root,collections:model.siteSettings?.collections??Object.values(model).filter(doc=>doc._type==='collection').sort((a,b)=>String(a.title).localeCompare(String(b.title))).map(doc=>reference(doc._id))}
    if(page==='cv')model[root]={_id:root,_type:root,entries:model.artistProfile?.cv??[]}
    if(page==='statement')model[root]={_id:root,_type:root,body:model.artistProfile?.statement??[]}
@@ -60,6 +61,7 @@ export function validatePage(snapshot:PageSnapshot):string|null {
      if(!(doc.image as {asset?:{_ref?:string}})?.asset?._ref)return `Upload a main image for “${String(doc.title)}” before publishing.`
    }
  }
+ if(page==='home'&&!String(model.siteSettings?.siteTitle||'').trim())return 'Enter a website title before publishing.'
  if(page==='about'&&!String(model.artistProfile?.name||'').trim())return 'Enter the artist name before publishing.'
  if(page==='cv')for(const entry of (model.cvPage.entries || []) as {category?:string;title?:string}[])if(!entry.category||!entry.title?.trim())return 'Choose a category and enter a title for each CV entry.'
  return null
@@ -67,7 +69,7 @@ export function validatePage(snapshot:PageSnapshot):string|null {
 function prepare(doc:RawDocument):RawDocument {
  const result={...fields(doc),_id:canonical(doc._id),_type:doc._type} as RawDocument
  if(['artwork','collection'].includes(doc._type)&&!(doc.slug as {current?:string})?.current){const title=String(doc.title||doc._type).normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);result.slug={_type:'slug',current:`${title||doc._type}-${canonical(doc._id).slice(-8)}`}}
- for(const key of ['image','portrait'] as const){const image=result[key] as Record<string,unknown>|undefined;if(image)result[key]={...image,alt:image.alt||String(doc.title||doc.name||'Artwork by Hong Yang')}}
+ for(const key of ['image','portrait','homeImage'] as const){const image=result[key] as Record<string,unknown>|undefined;if(image)result[key]={...image,alt:image.alt||String(doc.title||doc.name||'Artwork by Hong Yang')}}
  if(Array.isArray(result.additionalImages))result.additionalImages=result.additionalImages.map((image:Record<string,unknown>)=>({...image,alt:image.alt||String(doc.title||'Artwork detail')}))
  return result
 }
@@ -103,7 +105,7 @@ export function createPageGateway(client:SanityClient):PageGateway {
        const published=snapshot.documents.find(doc=>doc._id===id)
        const prepared=prepare(draft)
        const strengthened=mapReferences(prepared,ref=>{const result={...ref};delete result._weak;delete result._strengthenOnPublish;return result}) as RawDocument
-       const key=({portfolioSettings:'collections',cvPage:'entries',statementPage:'body',artistProfile:'name'} as Record<string,string>)[draft._type] || 'title'
+       const key=({siteSettings:'siteTitle',portfolioSettings:'collections',cvPage:'entries',statementPage:'body',artistProfile:'name'} as Record<string,string>)[draft._type] || 'title'
        tx=tx.patch(draft._id,p=>p.ifRevisionId(String(draft._rev)).set({[key]:draft[key]??[]}))
        if(published)tx=tx.patch(id,p=>p.ifRevisionId(String(published._rev)).set({[key]:published[key]??[]})).createOrReplace({...strengthened,_id:id})
        else tx=tx.create({...strengthened,_id:id})
