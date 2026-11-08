@@ -95,8 +95,8 @@ existing project member account. This is a custom interface that matches the
 website, rather than the standard document editor.
 
 1. Choose **Upload an image**, or select an already published portfolio work.
-2. Enter an image description for uploaded pictures. Add an optional caption,
-   homepage text, and portfolio button label.
+2. Add an optional caption and portfolio button label. Image descriptions are
+   generated automatically; the simple editor has no description or homepage-body-text field. Existing stored text is preserved.
 3. Check the live preview; switch to Mobile to inspect the narrow layout.
 4. Click **Save draft** to keep your work without changing the website.
 5. Click **Publish**, then **Yes, publish homepage** when you are ready.

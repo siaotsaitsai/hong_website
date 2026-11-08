@@ -18,12 +18,11 @@ export function homeForm(doc?: RawDocument): HomeForm {
 export function homeDocument(form: HomeForm, base?: RawDocument): RawDocument {
   const doc: RawDocument={...fields(base),_id:'drafts.siteSettings',_type:'siteSettings',siteTitle:base?.siteTitle || 'Hong Yang',homeCaption:form.caption,homeText:form.text,portfolioLinkLabel:form.linkLabel.trim() || 'Explore portfolio'}
   delete doc.homeImage;delete doc.heroArtwork
-  if(form.mode==='image' && form.image) doc.homeImage={...form.image,alt:form.imageDescription}
+  if(form.mode==='image' && form.image) doc.homeImage={...form.image,alt:form.imageDescription.trim() || form.caption.trim() || 'Artwork by Hong Yang'}
   if(form.mode==='artwork' && form.artworkId) doc.heroArtwork={_type:'reference',_ref:form.artworkId}
   return doc
 }
 export function validateHome(form: HomeForm, snapshot: HomeSnapshot): string | null {
-  if(form.mode==='image' && form.image && !form.imageDescription.trim()) return 'Please describe the image before publishing.'
   if(form.mode==='artwork' && !form.artworkId) return 'Choose a published artwork or switch to Upload an image.'
   if(form.mode==='artwork' && !snapshot.documents.some(doc=>doc._id===form.artworkId && doc._type==='artwork')) return 'Publish the selected artwork in the advanced editor first, or upload an image.'
   return null
