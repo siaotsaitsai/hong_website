@@ -38,7 +38,8 @@ Inside a collection:
 - **Upload artworks** accepts one or several image files and creates a card for each.
 - **Add artwork** starts a blank card. Upload its main image before publishing.
 - **Use existing artwork** adds a work already stored in the project.
-- **Edit details** opens the title, year, medium, dimensions and description.
+- **Dimensions (inches by default)** is always visible on each artwork card.
+- **Edit details** opens the title, year, medium and description.
 - **Add detail images** uploads extra views. Remove an extra view with its Remove button.
 - Drag handles or use up/down arrows to change the artwork order.
 

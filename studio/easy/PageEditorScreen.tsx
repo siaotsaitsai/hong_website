@@ -86,10 +86,11 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
    return <article className="easy-work-card" key={id} aria-label={`Artwork: ${String(doc.title)}`} onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();event.stopPropagation();drop('artwork',collectionId,index,'artworks')}}>
      <div className="easy-work-photo">{src?<img src={src} alt={String(doc.title)}/>:<span>Upload a main image</span>}</div>
      <div className="easy-card-heading"><strong>{String(doc.title||'Untitled work')}</strong>{sortControls('artwork',collectionId,index,total,String(doc.title||'work'),'artworks')}</div>
+     {field(id,'dimensions','Dimensions (inches by default)')}
      <button type="button" className="easy-text-button" onClick={()=>{setExpanded(expanded===id?null:id);setFocus(id)}}>{expanded===id?'Close details':'Edit details'}</button>
      {expanded===id&&<div className="easy-work-fields">
        {uploadControl(id,'image',src?'Replace main image':'Upload main image')}
-       {field(id,'title','Artwork title')}{field(id,'year','Year')}{field(id,'medium','Medium')}{field(id,'dimensions','Dimensions (inches by default)')}{field(id,'description','Artwork description',true)}
+       {field(id,'title','Artwork title')}{field(id,'year','Year')}{field(id,'medium','Medium')}{field(id,'description','Artwork description',true)}
        <div className="easy-detail-photos">{list<Record<string,unknown>>(doc.additionalImages).map((image,i)=><div key={String(image._key||i)}><img src={imageUrl(image)} alt="Artwork detail"/><button type="button" aria-label={`Remove detail image ${i+1}`} onClick={()=>change(id,{additionalImages:list(doc.additionalImages).filter((_,j)=>j!==i)})}>Remove</button></div>)}</div>
        {uploadControl(id,'additionalImages','Add detail images',true)}
      </div>}
