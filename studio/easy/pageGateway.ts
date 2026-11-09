@@ -1,3 +1,4 @@
+import {artworkMedium} from '../../shared/artworkMedium'
 import {uploadImage} from './uploadImage'
 import type {SanityClient} from 'sanity'
 import type {RawDocument} from '../../shared/previewContent'
@@ -32,6 +33,7 @@ export function pageSnapshot(page:PageName,documents:RawDocument[]):PageSnapshot
    if(page==='statement')model[root]={_id:root,_type:root,body:model.artistProfile?.statement??[]}
    if(page==='about')model[root]={_id:root,_type:'artistProfile',name:'Hong Yang',introduction:''}
  }
+ if(page==='portfolio')for(const id of portfolioTargets(model)){const doc=model[id];if(doc?._type==='artwork')model[id]={...doc,medium:artworkMedium(doc.medium)}}
  return {page,documents,model}
 }
 function mapReferences(value:unknown,transform:(ref:Record<string,unknown>)=>Record<string,unknown>):unknown {
@@ -69,6 +71,7 @@ export function validatePage(snapshot:PageSnapshot):string|null {
 }
 function prepare(doc:RawDocument):RawDocument {
  const result={...fields(doc),_id:canonical(doc._id),_type:doc._type} as RawDocument
+ if(doc._type==='artwork')result.medium=artworkMedium(doc.medium)
  if(['artwork','collection'].includes(doc._type)&&!(doc.slug as {current?:string})?.current){const title=String(doc.title||doc._type).normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);result.slug={_type:'slug',current:`${title||doc._type}-${canonical(doc._id).slice(-8)}`}}
  for(const key of ['image','portrait','homeImage'] as const){const image=result[key] as Record<string,unknown>|undefined;if(image)result[key]={...image,alt:image.alt||String(doc.title||doc.name||'Artwork by Hong Yang')}}
  if(Array.isArray(result.additionalImages))result.additionalImages=result.additionalImages.map((image:Record<string,unknown>)=>({...image,alt:image.alt||String(doc.title||'Artwork detail')}))

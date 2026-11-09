@@ -59,6 +59,10 @@ Inside a collection:
 - **Add detail images** uploads extra views. Remove an extra view with its Remove button.
 - Drag handles or use up/down arrows to change the artwork order.
 
+Missing artwork medium defaults to **Oil on canvas**. Existing media such as
+**Oil on panel** are preserved. Click the medium beneath any artwork to edit it;
+saving/publishing Portfolio stores the displayed defaults for visible works.
+
 Dimensions default to inches. Enter `24 × 36`, or explicitly include another unit,
 such as `60 × 80 cm`. Image descriptions and URL slugs are generated automatically;
 no manual technical fields are required.

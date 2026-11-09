@@ -18,12 +18,15 @@ body[data-on-page-edit] [data-edit-field]{outline-color:#dce3d7}
 .about-copy p{font-size:16px;line-height:1.8;color:#5d645b;white-space:pre-line}
 input,textarea,select{font:inherit}
 
-/* Compact portfolio thumbnails; the existing dialog shows the full artwork. */
-.artwork-grid{grid-template-columns:minmax(0,160px);gap:36px 28px}
-.artwork-grid .artwork-button{height:140px;display:grid;place-items:center}
-.artwork-grid img{width:auto;max-width:100%;height:auto;max-height:140px;object-fit:contain}
-.artwork-grid .artwork-open{right:5px;bottom:5px;width:24px;height:24px}
-@media(max-width:700px){.artwork-grid{grid-template-columns:minmax(0,140px);gap:28px 18px}.artwork-grid .artwork-button{height:120px}.artwork-grid img{max-height:120px}}
+/* Match the reference site's image width: 38.5% of its desktop gallery
+   (viewport minus 200px navigation and 48px gallery padding), 60% on mobile. */
+.artwork-grid{grid-template-columns:minmax(0,1fr);justify-items:center;gap:96px}
+.artwork-grid figure{width:min(100%,calc((100vw - 248px)*.385));min-width:0}
+.artwork-grid .artwork-button{height:auto;display:block}
+.artwork-grid img{width:100%;height:auto;max-width:100%;max-height:none;object-fit:contain}
+.artwork-grid figcaption{align-items:center;text-align:center}
+.artwork-grid .artwork-open{right:8px;bottom:8px;width:26px;height:26px}
+@media(max-width:700px){.artwork-grid{gap:64px}.artwork-grid figure{width:min(100%,calc((100vw - 32px)*.6))}}
 
 #cv-content .cv-text{padding-top:40px;max-width:720px;font-size:16px;line-height:1.8}
 .cv-text p+p,.cv-text h2{margin-top:20px}

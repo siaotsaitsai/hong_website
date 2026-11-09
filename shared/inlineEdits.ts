@@ -1,3 +1,4 @@
+import {artworkMedium} from './artworkMedium'
 import {portfolioTargets,type DocumentModel,type PageName} from '../studio/easy/pageGateway'
 import {cleanPortableText,type TextBlock} from './portableText'
 export type InlineEdit={id:string;field:string;value:string|TextBlock[];key?:string}
@@ -25,7 +26,7 @@ export function applyInlineEdits(model:DocumentModel,value:unknown,page:PageName
      const field=item.field.slice(3);const text=field==='category'?item.value.toLowerCase().trim():item.value
      if(field==='category'&&!['exhibition','education','residency','other'].includes(text))throw new Error('Choose exhibition, education, residency, or other.')
      next[item.id]={...next[item.id],entries:doc.entries.map((entry,i)=>i===index?{...entry,[field]:text}:entry)}
-   }else next[item.id]={...next[item.id],[item.field]:item.field==='portfolioLinkLabel'?(item.value.trim()||'Explore portfolio'):item.value}
+   }else next[item.id]={...next[item.id],[item.field]:item.field==='medium'?artworkMedium(item.value):item.field==='portfolioLinkLabel'?(item.value.trim()||'Explore portfolio'):item.value}
  }
  return next
 }

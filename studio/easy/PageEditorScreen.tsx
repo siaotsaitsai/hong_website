@@ -96,7 +96,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
  }
  function addWork(collectionId:string,id?:string){
    const nextId=id||`artwork-${crypto.randomUUID()}`
-   updateModel(current=>({...current,...(!id?{[nextId]:{_id:nextId,_type:'artwork',title:'Untitled work',year:'',medium:'',dimensions:'',description:''}}:{}),[collectionId]:{...current[collectionId],artworks:[...list(current[collectionId].artworks),reference(nextId)]}}));changed();setExpanded(nextId);setFocus(nextId)
+   updateModel(current=>({...current,...(!id?{[nextId]:{_id:nextId,_type:'artwork',title:'Untitled work',year:'',medium:'Oil on canvas',dimensions:'',description:''}}:{}),[collectionId]:{...current[collectionId],artworks:[...list(current[collectionId].artworks),reference(nextId)]}}));changed();setExpanded(nextId);setFocus(nextId)
  }
  async function upload(files:FileList|File[]|null,id:string,key:'image'|'portrait'|'homeImage'|'additionalImages'|'newWorks'){
    if(!files?.length)return
@@ -112,7 +112,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
      if(key==='newWorks'){
        const workId=`artwork-${crypto.randomUUID()}`
        const name=file.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ')
-       updateModel(current=>({...current,[workId]:{_id:workId,_type:'artwork',title:name||'Untitled work',year:'',medium:'',dimensions:'',description:'',image:{...image,alt:name||'Artwork by Hong Yang'}},[id]:{...current[id],artworks:[...list(current[id].artworks),reference(workId)]}}))
+       updateModel(current=>({...current,[workId]:{_id:workId,_type:'artwork',title:name||'Untitled work',year:'',medium:'Oil on canvas',dimensions:'',description:'',image:{...image,alt:name||'Artwork by Hong Yang'}},[id]:{...current[id],artworks:[...list(current[id].artworks),reference(workId)]}}))
      }else if(key==='additionalImages')updateModel(current=>({...current,[id]:{...current[id],additionalImages:[...list(current[id].additionalImages),image]}}))
      else updateModel(current=>({...current,[id]:{...current[id],[key]:image}}))
      completed++;changed()

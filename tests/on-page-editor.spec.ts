@@ -24,6 +24,9 @@ test('clicking the actual webpage edits title and dimensions, flushes focused in
  await expect(frame.getByRole('textbox',{name:'Artwork title',exact:true})).toBeVisible()
  await frame.getByRole('textbox',{name:'Artwork title',exact:true}).fill('An edited painting')
  await frame.getByRole('textbox',{name:'Artwork title',exact:true}).press('Enter')
+ const medium=frame.getByRole('textbox',{name:'Artwork medium',exact:true})
+ await expect(medium).toHaveText('Oil on canvas')
+ await medium.fill('Oil on panel');await medium.press('Enter')
  const dimensions=frame.getByRole('textbox',{name:'Artwork dimensions (inches by default)',exact:true})
  await dimensions.fill('18 × 24')
  // Save while the caret is still inside the frame; no manual blur or Enter.
@@ -46,6 +49,7 @@ test('clicking the actual webpage edits title and dimensions, flushes focused in
  await expect(page.getByRole('status')).toContainText('Portfolio published')
  expect(await page.evaluate(()=>Reflect.get(window,'editorTest').publishes)).toBe(1)
  await expect(frame.getByRole('textbox',{name:'Artwork title',exact:true})).toHaveText('Final painting title')
+ await expect(medium).toHaveText('Oil on panel')
  await page.screenshot({path:'/tmp/hong-on-page-editor.png',fullPage:false})
 })
 test('ordinary website visitors cannot enable editing through URL parameters',async({page})=>{
