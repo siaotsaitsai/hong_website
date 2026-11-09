@@ -38,7 +38,7 @@ export function resolvePreview(documents: RawDocument[], displayed?: Partial<Raw
     settings: settings ? {siteTitle: text(settings.siteTitle), description: text(settings.description), heroArtwork: artwork(dereference(settings.heroArtwork)), homeImage: image(settings.homeImage), homeCaption: text(settings.homeCaption), homeText: text(settings.homeText), portfolioLinkLabel: text(settings.portfolioLinkLabel), collections: settings.collections === undefined ? undefined : refs(settings.collections)} : null,
     profile: profile ? {name: text(profile.name), introduction: text(profile.introduction), portrait: image(profile.portrait), statement: list(profile.statement) as Profile['statement'], cv: list(profile.cv) as Profile['cv']} : null,
     portfolio: portfolio ? {collections: refs(portfolio.collections)} : null,
-    cvPage: cv ? {entries: list(cv.entries) as NonNullable<Profile['cv']>} : null,
+    cvPage: cv ? {entries: list(cv.entries) as NonNullable<Profile['cv']>,...(Array.isArray(cv.body)?{body:cv.body as NonNullable<Profile['statement']>}:{})} : null,
     statementPage: statement ? {body: list(statement.body) as NonNullable<Profile['statement']>} : null,
     artworks: [...docs.values()].filter(doc => doc._type === 'artwork').sort((a,b) => String(b.year || '').localeCompare(String(a.year || '')) || String(a.title || '').localeCompare(String(b.title || ''))).map(doc => artwork(doc)!),
     collections: [...docs.values()].filter(doc => doc._type === 'collection').sort((a,b) => String(a.title || '').localeCompare(String(b.title || ''))).map(doc => collection(doc)!),

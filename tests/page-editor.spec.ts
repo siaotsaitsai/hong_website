@@ -42,6 +42,7 @@ test('Portfolio cards support upload, details, artwork and collection ordering, 
 })
 test('CV editing, ordering, navigation guards, and About editing are available without advanced tools',async({page})=>{
  await page.goto('http://127.0.0.1:3333/tests/easy/?section=cv')
+ await page.getByText('Previous structured entries',{exact:true}).click()
  await page.getByRole('button',{name:'Add experience',exact:true}).click()
  await page.getByRole('textbox',{name:'Year',exact:true}).fill('2026')
  await page.getByRole('textbox',{name:'Title and location'}).fill('First exhibition, New York')
@@ -81,7 +82,7 @@ test('remaining editor sections can be reached on a phone',async({page})=>{
  await page.goto('http://127.0.0.1:3333/tests/easy/?section=portfolio')
  const nav=page.getByRole('navigation',{name:'Mobile editor pages',exact:true})
  await nav.getByRole('button',{name:'CV',exact:true}).click()
- await expect(page.getByRole('button',{name:'Add experience',exact:true})).toBeVisible()
+ await expect(page.getByRole('textbox',{name:'CV text',exact:true})).toBeVisible()
  await nav.getByRole('button',{name:'Artist Statement',exact:true}).click()
  await expect(page.getByRole('textbox',{name:'Artist statement',exact:true})).toBeVisible()
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)

@@ -64,7 +64,7 @@ export function validatePage(snapshot:PageSnapshot):string|null {
  }
  if(page==='home'&&!String(model.siteSettings?.siteTitle||'').trim())return 'Enter a website title before publishing.'
  if(page==='about'&&!String(model.artistProfile?.name||'').trim())return 'Enter the artist name before publishing.'
- if(page==='cv')for(const entry of (model.cvPage.entries || []) as {category?:string;title?:string}[])if(!entry.category||!entry.title?.trim())return 'Choose a category and enter a title for each CV entry.'
+ if(page==='cv'&&!Array.isArray(model.cvPage.body))for(const entry of (model.cvPage.entries || []) as {category?:string;title?:string}[])if(!entry.category||!entry.title?.trim())return 'Choose a category and enter a title for each CV entry.'
  return null
 }
 function prepare(doc:RawDocument):RawDocument {

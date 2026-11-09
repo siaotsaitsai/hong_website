@@ -15,14 +15,14 @@ function read(root:HTMLElement):TextBlock[] {
  for(const node of Array.from(root.childNodes)){const children=spans(node);if(!children.length)continue;blocks.push({_key:crypto.randomUUID(),_type:'block',style:node instanceof HTMLElement&&node.tagName==='H2'?'h2':'normal',children,markDefs:[]})}
  return blocks
 }
-export function RichTextEditor({value,onChange,identity,disabled=false}:{value:TextBlock[];onChange:(blocks:TextBlock[])=>void;identity:string;disabled?:boolean}) {
+export function RichTextEditor({value,onChange,identity,disabled=false,label='Artist statement'}:{value:TextBlock[];onChange:(blocks:TextBlock[])=>void;identity:string;disabled?:boolean;label?:string}) {
  const editor=useRef<HTMLDivElement>(null)
  const [hint,setHint]=useState('Select text, then choose Bold or Italic. Enter starts a new paragraph.')
  useEffect(()=>{if(editor.current)editor.current.innerHTML=html(value)},[identity]) // Keep the caret stable while typing.
  const changed=()=>{if(editor.current)onChange(read(editor.current))}
  function format(tag:'strong'|'em'|'h2'|'p'){
    const selection=window.getSelection();if(!editor.current||!selection?.rangeCount)return
-   const range=selection.getRangeAt(0);if(!editor.current.contains(range.commonAncestorContainer)){setHint('Click in the statement first, then choose a format.');return}
+   const range=selection.getRangeAt(0);if(!editor.current.contains(range.commonAncestorContainer)){setHint('Click in the text first, then choose a format.');return}
    if(tag==='h2'||tag==='p'){
      let node:Node=range.startContainer
      while(node.parentNode&&node.parentNode!==editor.current)node=node.parentNode
@@ -39,5 +39,5 @@ export function RichTextEditor({value,onChange,identity,disabled=false}:{value:T
    }
    changed()
  }
- return <div className="easy-rich"><div className="easy-rich-toolbar">{(['strong','em','h2','p'] as const).map((tag,i)=><button type="button" disabled={disabled} key={tag} onMouseDown={event=>event.preventDefault()} onClick={()=>format(tag)}>{['Bold','Italic','Heading','Paragraph'][i]}</button>)}</div><div ref={editor} role="textbox" aria-label="Artist statement" aria-multiline="true" contentEditable={!disabled} suppressContentEditableWarning onInput={changed} onPaste={event=>{event.preventDefault();const text=event.clipboardData.getData('text/plain');const selection=window.getSelection();if(selection?.rangeCount&&editor.current?.contains(selection.getRangeAt(0).commonAncestorContainer)){const range=selection.getRangeAt(0);range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);changed()}}}/><small>{hint}</small></div>
+ return <div className="easy-rich"><div className="easy-rich-toolbar">{(['strong','em','h2','p'] as const).map((tag,i)=><button type="button" disabled={disabled} key={tag} onMouseDown={event=>event.preventDefault()} onClick={()=>format(tag)}>{['Bold','Italic','Heading','Paragraph'][i]}</button>)}</div><div ref={editor} role="textbox" aria-label={label} aria-multiline="true" contentEditable={!disabled} suppressContentEditableWarning onInput={changed} onPaste={event=>{event.preventDefault();const text=event.clipboardData.getData('text/plain');const selection=window.getSelection();if(selection?.rangeCount&&editor.current?.contains(selection.getRangeAt(0).commonAncestorContainer)){const range=selection.getRangeAt(0);range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);changed()}}}/><small>{hint}</small></div>
 }

@@ -12,7 +12,7 @@ export function applyInlineEdits(model:DocumentModel,value:unknown,page:PageName
    if(page==='home'&&item.id==='siteSettings'&&doc._type==='siteSettings')fields=['homeCaption','portfolioLinkLabel']
    if(page==='about'&&item.id==='artistProfile'&&doc._type==='artistProfile')fields=['name','introduction']
    if(page==='statement'&&item.id==='statementPage'&&doc._type==='statementPage')fields=['body']
-   if(page==='cv'&&item.id==='cvPage'&&doc._type==='cvPage')fields=['cv.category','cv.year','cv.title']
+   if(page==='cv'&&item.id==='cvPage'&&doc._type==='cvPage')fields=['body','cv.category','cv.year','cv.title']
    if(!fields.includes(item.field))throw new Error('This field cannot be edited from this page.')
    if(next===model)next={...model}
    if(item.field==='body'){next[item.id]={...next[item.id],body:cleanPortableText(item.value)};continue}

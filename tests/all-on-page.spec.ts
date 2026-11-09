@@ -32,6 +32,7 @@ test('CV supports on-page editing, add/remove/reorder and category selection',as
  await frame.getByRole('textbox',{name:'CV year',exact:true}).fill('2026');await frame.getByRole('textbox',{name:'CV year',exact:true}).press('Enter')
  await frame.getByRole('combobox',{name:'CV category',exact:true}).selectOption('education')
  await frame.getByRole('button',{name:'Add experience',exact:true}).click()
+ await expect(frame.getByRole('textbox',{name:'CV title and location',exact:true})).toHaveCount(2)
  await frame.getByRole('textbox',{name:'CV title and location',exact:true}).last().fill('A second experience');await frame.getByRole('textbox',{name:'CV title and location',exact:true}).last().press('Enter')
  await frame.getByRole('button',{name:'Move up',exact:true}).last().click();await expect(frame.getByRole('textbox',{name:'CV title and location',exact:true}).first()).toHaveText('A second experience')
  await frame.getByRole('button',{name:'Remove entry',exact:true}).first().click();await expect(frame.getByRole('textbox',{name:'CV title and location',exact:true})).toHaveCount(1)

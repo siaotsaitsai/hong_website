@@ -80,9 +80,12 @@ selected portfolio. A focused preview may show an item before it is publicly vis
 
 ## CV
 
-Click **Add experience**, then click the year and title/location directly on the
-page. Choose a category from its dropdown. Use arrows to arrange entries. **Remove experience** removes it from the
-current draft; the public CV changes only after publishing.
+CV opens with a rich-text box, like Artist Statement. Type or paste the whole CV,
+then format paragraphs, headings, bold or italic text. Existing structured entries
+are prefilled as text until you first edit it. The original entries remain stored
+under **Previous structured entries**. Once text is saved/published, that text is
+used instead of the old entry layout. Publishing empty text clears the displayed CV.
+**Edit on page** also supports editing the saved CV text directly.
 
 ## Artist Statement
 

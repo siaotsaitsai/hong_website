@@ -18,4 +18,13 @@ body[data-on-page-edit] [data-edit-field]{outline-color:#dce3d7}
 .about-copy p{font-size:16px;line-height:1.8;color:#5d645b;white-space:pre-line}
 input,textarea,select{font:inherit}
 
-body[data-page="works"] .page-heading h1,body[data-page="works"] .page-heading h1 em{color:#000}
+/* Compact portfolio thumbnails; the existing dialog shows the full artwork. */
+.artwork-grid{grid-template-columns:minmax(0,160px);gap:36px 28px}
+.artwork-grid .artwork-button{height:140px;display:grid;place-items:center}
+.artwork-grid img{width:auto;max-width:100%;height:auto;max-height:140px;object-fit:contain}
+.artwork-grid .artwork-open{right:5px;bottom:5px;width:24px;height:24px}
+@media(max-width:700px){.artwork-grid{grid-template-columns:minmax(0,140px);gap:28px 18px}.artwork-grid .artwork-button{height:120px}.artwork-grid img{max-height:120px}}
+
+#cv-content .cv-text{padding-top:40px;max-width:720px;font-size:16px;line-height:1.8}
+.cv-text p+p,.cv-text h2{margin-top:20px}
+.cv-text h2{margin-bottom:12px}
