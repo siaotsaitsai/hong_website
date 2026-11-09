@@ -18,8 +18,4 @@ body[data-on-page-edit] [data-edit-field]{outline-color:#dce3d7}
 .about-copy p{font-size:16px;line-height:1.8;color:#5d645b;white-space:pre-line}
 input,textarea,select{font:inherit}
 
-/* Keep every text label black, including muted metadata and editing controls. */
-:root{color:#000;--muted:#000}
-body,body *,dialog,dialog *{color:#000!important}
-input::placeholder,textarea::placeholder{color:#000;opacity:1}
-body[data-on-page-edit] [data-edit-field]:empty::before{color:#000}
+body[data-page="works"] .page-heading h1,body[data-page="works"] .page-heading h1 em{color:#000}
