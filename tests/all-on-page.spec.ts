@@ -47,7 +47,7 @@ test('Artist Statement supports direct rich-text changes and About supports dire
  await expect(frame.locator('#statement-content strong')).toHaveText('A statement about memory.')
  await frame.getByRole('link',{name:'About',exact:true}).click()
  const biography=frame.getByRole('textbox',{name:'Biography',exact:true});await biography.fill('First paragraph.\nSecond paragraph.')
- await frame.getByRole('textbox',{name:'Artist name',exact:true}).click()
+ await biography.press('Tab')
  const chooser=page.waitForEvent('filechooser');await frame.getByRole('button',{name:'Upload portrait',exact:true}).click();await(await chooser).setFiles(image)
  await expect.poll(()=>page.evaluate(()=>Reflect.get(window,'editorTest').uploads)).toBe(1)
  await page.getByRole('button',{name:'Publish',exact:true}).click();await page.getByRole('button',{name:'Yes, publish About',exact:true}).click();await expect(page.getByRole('status')).toContainText('About published')

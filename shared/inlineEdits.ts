@@ -8,7 +8,7 @@ export function applyInlineEdits(model:DocumentModel,value:unknown,page:PageName
    if(!item||typeof item.id!=='string'||typeof item.field!=='string')throw new Error('Invalid page edit.')
    const doc=next[item.id];if(!doc)throw new Error('This item is not available.')
    let fields:string[]=[]
-   if(page==='portfolio'&&visible.has(item.id))fields=doc._type==='artwork'?['title','dimensions','year']:doc._type==='collection'?['title']:[]
+   if(page==='portfolio'&&visible.has(item.id))fields=doc._type==='artwork'?['title','dimensions','year','medium']:doc._type==='collection'?['title']:[]
    if(page==='home'&&item.id==='siteSettings'&&doc._type==='siteSettings')fields=['homeCaption','portfolioLinkLabel']
    if(page==='about'&&item.id==='artistProfile'&&doc._type==='artistProfile')fields=['name','introduction']
    if(page==='statement'&&item.id==='statementPage'&&doc._type==='statementPage')fields=['body']

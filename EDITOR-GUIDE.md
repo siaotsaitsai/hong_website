@@ -26,7 +26,7 @@ is preserved. Uploading an image alone does not publish the page.
 Portfolio opens in **Edit on page** mode: the canvas is the actual website,
 with editing enabled only inside the signed-in editor.
 
-- Click a collection name, artwork title, year, or dimensions to edit in place.
+- Click a collection name, artwork title, year, medium, or dimensions to edit in place.
 - Press Enter or click elsewhere to finish. Esc cancels the current text edit.
 - Click an artwork image to choose a replacement image.
 - Click **Add artwork** beneath a collection to upload one or several works.
@@ -93,7 +93,8 @@ An empty published statement clears the previous statement.
 
 ## About
 
-Click the artist name and biography to edit them directly. Enter adds a biography
+Click the biography to edit it directly. The artist name is not repeated in the
+About body; it remains editable through **Use forms**. Enter adds a biography
 line; Ctrl/Cmd+Enter finishes editing. Click the portrait to replace it, or use the
 upload button if no portrait exists. **Use forms** also supports portrait removal. The name also appears in the public website navigation and
 copyright. CV and Artist Statement are edited independently.
