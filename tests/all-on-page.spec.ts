@@ -54,9 +54,9 @@ test('Artist Statement supports direct rich-text changes and About supports dire
  await page.getByRole('button',{name:'Publish',exact:true}).click();await page.getByRole('button',{name:'Yes, publish About',exact:true}).click();await expect(page.getByRole('status')).toContainText('About published')
  await expect(biography).toContainText('Second paragraph.')
 })
-test('the website footer provides a login entry without enabling public editing',async({page})=>{
+test('the public website has no editor entry or editable fields',async({page})=>{
  await page.route('https://htq7wor5.api.sanity.io/**',route=>route.fulfill({json:{result:{settings:null,profile:null,artworks:[],collections:[]}}}))
  await page.goto('/')
- await expect(page.getByRole('link',{name:'Edit website',exact:true})).toHaveAttribute('href',/sanity\.studio\/edit\?editorPage=home$/)
+ await expect(page.getByRole('link',{name:'Edit website',exact:true})).toHaveCount(0)
  await expect(page.locator('[contenteditable]')).toHaveCount(0)
 })

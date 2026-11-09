@@ -25,6 +25,7 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
  const [error,setError]=useState('')
  const [notice,setNotice]=useState('')
  const [confirmation,setConfirmation]=useState(false)
+ const [removal,setRemoval]=useState<(Parameters<typeof applyPortfolioAction>[1]&{requestId?:string})|null>(null)
  const [expanded,setExpanded]=useState<string|null>(null)
  const [focus,setFocus]=useState<string|null>(null)
  const [mobile,setMobile]=useState(false)
@@ -37,7 +38,8 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
  const title=editorPages.find(([key])=>key===page)![1]
  const preview=useMemo(()=>{const url=new URL(routes[page],previewBase);url.searchParams.set('studioPreview','1');url.searchParams.set('previewChannel',channel);return url},[page,previewBase,channel])
  const content=useMemo(()=>snapshot?resolvePreview([...snapshot.documents,...Object.values(model).map(doc=>({...doc,_id:`drafts.${doc._id}`}))],focus&&model[focus]?{...model[focus],_id:`drafts.${focus}`}:undefined):null,[snapshot,model,focus])
- const send=useCallback(()=>{if(content)frame.current?.contentWindow?.postMessage({type:'portfolio:preview',channel,content,mode:visual?'edit':'preview',busy:!!busy},preview.origin)},[content,channel,preview.origin,visual,busy])
+ const send=useCallback(()=>{if(content)frame.current?.contentWindow?.postMessage({type:'portfolio:preview',channel,content,mode:visual?'edit':'preview',busy:!!busy,capabilities:['portfolio-actions-v1']},preview.origin)},[content,channel,preview.origin,visual,busy])
+ const replyAction=useCallback((requestId:unknown,result:Record<string,unknown>)=>{if(typeof requestId==='string')frame.current?.contentWindow?.postMessage({type:'portfolio:action-result',channel,requestId,...result},preview.origin)},[channel,preview.origin])
  const apply=useCallback((next:PageSnapshot)=>{setSnapshot(next);setModel(next.model);setSavedModel(JSON.stringify(next.model));setConfirmation(false);setInlinePending(false);modelRef.current=next.model},[])
  const load=useCallback(async()=>{setBusy('Loading');setError('');try{apply(await gateway.load(page))}catch(err){setError(message(err))}finally{setBusy('')}},[gateway,page,apply])
  useEffect(()=>{void load()},[load])
@@ -66,9 +68,9 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
          if(data.field==='homeImage'&&page==='home'&&data.id==='siteSettings')void upload(data.files,data.id,'homeImage')
        }
        if(data.type==='portfolio:action'&&page==='portfolio'&&!busy){
-         const current=modelRef.current
-         const next=applyPortfolioAction(current,data)
-         if(data.action!=='remove-artwork'||window.confirm('Remove this artwork from this collection? The original file stays stored. Publish to update the website.')){updateModel(()=>next);changed()}
+         const next=applyPortfolioAction(modelRef.current,data)
+         if(data.action==='remove-artwork'){setRemoval(data);replyAction(data.requestId,{pending:true})}
+         else{updateModel(()=>next);changed();setError('');setNotice('Artwork order updated. Save a draft or publish when ready.');replyAction(data.requestId,{ok:true})}
        }
        if(data.type==='portfolio:action'&&page==='cv'&&!busy){
          const entries=list<Record<string,unknown>>(modelRef.current[root].entries)
@@ -76,10 +78,16 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
          else{const index=entries.findIndex((entry,i)=>String(entry._key??i)===data.key);if(index>=0){if(data.action==='remove-cv')change(root,{entries:entries.filter((_,i)=>i!==index)});if(data.action==='up-cv')change(root,{entries:move(entries,index,index-1)});if(data.action==='down-cv')change(root,{entries:move(entries,index,index+1)})}}
        }
        if(data.type==='portfolio:navigate'&&editorPages.some(([id])=>id===data.page))navigate(data.page)
-     }catch(err){setError(message(err));const request=flushRequests.current.get(data.requestId);if(request){clearTimeout(request.timer);flushRequests.current.delete(data.requestId);request.reject(err instanceof Error?err:new Error(message(err)))}}
+     }catch(err){setError(message(err));if(data.type==='portfolio:action')replyAction(data.requestId,{ok:false,error:message(err)});const request=flushRequests.current.get(data.requestId);if(request){clearTimeout(request.timer);flushRequests.current.delete(data.requestId);request.reject(err instanceof Error?err:new Error(message(err)))}}
    }
    window.addEventListener('message',handler);send();return()=>window.removeEventListener('message',handler)
- },[send,channel,preview.origin,visual,page,busy,dirty])
+ },[send,channel,preview.origin,visual,page,busy,dirty,replyAction])
+ function finishRemoval(remove:boolean){
+   if(!removal)return
+   try{if(remove){updateModel(current=>applyPortfolioAction(current,removal));changed();setError('');setNotice('Artwork removed from this collection. Save a draft or publish when ready.')}replyAction(removal.requestId,{ok:true,cancelled:!remove})}
+   catch(err){setError(message(err));replyAction(removal.requestId,{ok:false,error:message(err)})}
+   setRemoval(null);frame.current?.focus()
+ }
  function flushInline():Promise<DocumentModel>{
    if(!visual)return Promise.resolve(modelRef.current)
    if(!connected)return Promise.reject(new Error('Wait for the page to connect, or choose Use forms.'))
@@ -183,5 +191,6 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
        <div className="easy-actions"><p>{confirmation?`Publish ${title}? ${page==='portfolio'?'Visible collections and their artworks will go live together.':'Visitors will see these changes.'}`:'Save a draft to come back later. Changes are not public until you publish.'}</p><div>{confirmation?<><button type="button" disabled={!!busy} onClick={()=>setConfirmation(false)}>Keep editing</button><button type="button" className="easy-primary" disabled={!!busy} onClick={()=>void save(true)}>Yes, publish {title}</button></>:<><button type="button" disabled={!snapshot||!!busy} onClick={()=>void save()}>Save draft</button><button type="button" className="easy-primary" disabled={!snapshot||!!busy} onClick={()=>void askToPublish()}>Publish</button></>}</div></div>
      </main>
    </div>
+   {removal&&<div className="easy-dialog-backdrop"><section role="alertdialog" aria-modal="true" aria-labelledby="remove-artwork-title" aria-describedby="remove-artwork-note" className="easy-confirm-dialog" onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();finishRemoval(false)}if(event.key==='Tab'){event.preventDefault();const buttons=Array.from(event.currentTarget.querySelectorAll('button'));buttons[(buttons.indexOf(document.activeElement as HTMLButtonElement)+1)%buttons.length]?.focus()}}}><h2 id="remove-artwork-title">Remove artwork?</h2><p id="remove-artwork-note">Remove this artwork from this collection? The original file stays stored. Publish to update the website.</p><div><button type="button" autoFocus onClick={()=>finishRemoval(false)}>Keep artwork</button><button type="button" onClick={()=>finishRemoval(true)}>Remove artwork</button></div></section></div>}
  </div>
 }

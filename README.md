@@ -221,7 +221,7 @@ transport, user-gesture file picking, focused-text saves, cancellation, publicat
 and the ordinary visitor flow; persistence still uses the member session and existing
 atomic/revision-checked gateway.
 
-The footer’s **Edit website** link opens the editor for the current page. Sanity
+The editor is accessed through a saved Studio URL; the public footer has no editing link. Sanity
 authentication and project membership enforce API access. `editorAccess.ts` additionally
 restricts every Studio layout, including advanced tools, to the two verified owner
 user IDs. Project membership must continue to contain only the approved human users;

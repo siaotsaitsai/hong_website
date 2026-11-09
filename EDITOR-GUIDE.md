@@ -1,7 +1,7 @@
 # Editing Hong Yang’s website
 
 Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
-approved owner account. You can also use **Edit website** in the website footer.
+approved owner account. Bookmark this address for future editing.
 Only the two approved owner accounts can enter; public visitors cannot edit. The five buttons on the left match the website:
 **Home, Portfolio, CV, Artist Statement, About**. On a phone, use the top row of tabs.
 
@@ -37,6 +37,9 @@ with editing enabled only inside the signed-in editor.
   stored and can be restored through **Use forms → Use existing artwork**.
 - Use the toolbar **Add collection** button to add a new category.
 - **Save draft** and **Publish** collect any still-focused text before saving.
+- Artwork controls keep pending text edits when clicked or dragged. A status line
+  confirms the operation. If the editor is out of date or does not respond, it
+  displays a reload instruction. Removal uses an in-editor confirmation dialog.
 
 Choose **Use forms** for collection/works ordering, descriptions, detail images,
 and fields not shown on the webpage. Choose **Edit on page** to return to the canvas.
