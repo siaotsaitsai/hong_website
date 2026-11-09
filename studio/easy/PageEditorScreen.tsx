@@ -1,3 +1,4 @@
+import {applyPortfolioAction} from '../../shared/portfolioActions'
 import {cvEntriesToText} from '../../shared/cvText'
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react'
 import {applyInlineEdits} from '../../shared/inlineEdits'
@@ -63,6 +64,11 @@ export function PageEditorScreen({page,gateway,onNavigate,userName='Artist',prev
          if(data.field==='newWorks'&&page==='portfolio'&&visible.includes(data.id))void upload(data.files,data.id,'newWorks')
          if(data.field==='portrait'&&page==='about'&&data.id==='artistProfile')void upload(data.files,data.id,'portrait')
          if(data.field==='homeImage'&&page==='home'&&data.id==='siteSettings')void upload(data.files,data.id,'homeImage')
+       }
+       if(data.type==='portfolio:action'&&page==='portfolio'&&!busy){
+         const current=modelRef.current
+         const next=applyPortfolioAction(current,data)
+         if(data.action!=='remove-artwork'||window.confirm('Remove this artwork from this collection? The original file stays stored. Publish to update the website.')){updateModel(()=>next);changed()}
        }
        if(data.type==='portfolio:action'&&page==='cv'&&!busy){
          const entries=list<Record<string,unknown>>(modelRef.current[root].entries)

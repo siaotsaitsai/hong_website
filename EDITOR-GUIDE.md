@@ -30,6 +30,11 @@ with editing enabled only inside the signed-in editor.
 - Press Enter or click elsewhere to finish. Esc cancels the current text edit.
 - Click an artwork image to choose a replacement image.
 - Click **Add artwork** beneath a collection to upload one or several works.
+- Under each artwork, use **Move up** / **Move down**, or drag its **↕ Drag** handle
+  onto another artwork in the same collection.
+- **Remove artwork** asks for confirmation and removes that placement from the
+  draft. Save/Publish to keep the change; the artwork and original image remain
+  stored and can be restored through **Use forms → Use existing artwork**.
 - Use the toolbar **Add collection** button to add a new category.
 - **Save draft** and **Publish** collect any still-focused text before saving.
 

@@ -20,7 +20,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">＋</span></button>
     <nav id="navigation" aria-label="Main navigation">
       <a href={base} aria-current={page === 'home' ? 'page' : undefined}>Home</a>
-      <a href={`${base}works/`} aria-current={page === 'works' ? 'page' : undefined}>Portfolio <span aria-hidden="true"><svg class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
+      <a href={`${base}works/`} aria-current={page === 'works' ? 'page' : undefined}>Portfolio <span aria-hidden="true"><svg width="11" height="11" class="arrow" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
       <div id="series-nav"></div>
       <a href={`${base}cv/`} aria-current={page === 'cv' ? 'page' : undefined}>CV</a>
       <a href={`${base}artist-statement/`} aria-current={page === 'statement' ? 'page' : undefined}>Artist Statement</a>

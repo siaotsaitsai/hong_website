@@ -2,6 +2,13 @@ import {readRichText,formatRichSelection} from '../../../shared/portableText'
 export type PageEdit={id:string;field:string;value:unknown;key?:string}
 export function createOnPageEditing(){
  let enabled=false,busy=false,origin='',channel=''
+ let dragged:{collection:string;id:string;index:number}|null=null
+ let dragY=0,dragFrame=0
+ function scrollDuringDrag(){dragFrame=0;if(!dragged||busy)return;const direction=dragY<60?-1:dragY>innerHeight-60?1:0;if(direction)window.scrollBy(0,direction*14);dragFrame=requestAnimationFrame(scrollDuringDrag)}
+ document.addEventListener('dragover',event=>{if(enabled&&!busy&&dragged){dragY=event.clientY;if(!dragFrame)dragFrame=requestAnimationFrame(scrollDuringDrag)}})
+ function stopDragging(){dragged=null;cancelAnimationFrame(dragFrame);dragFrame=0;document.querySelectorAll('[data-drag-over]').forEach(el=>el.removeAttribute('data-drag-over'))}
+ document.addEventListener('dragend',stopDragging)
+ document.addEventListener('drop',stopDragging)
  let active:{element:HTMLElement;id:string;field:string;key?:string;initial:string;display:string;html:string;modified:boolean;rich:boolean;multiline:boolean}|null=null
  const pending=new Map<string,PageEdit>()
  const post=(type:string,extra:Record<string,unknown>={})=>{if(origin)window.parent.postMessage({type,channel,...extra},origin)}
@@ -49,7 +56,7 @@ export function createOnPageEditing(){
    if(!enabled)return
    const target=event.target as Element
    const action=target.closest<HTMLElement>('[data-edit-action]')
-   if(action){event.preventDefault();event.stopImmediatePropagation();if(!busy){commit();post('portfolio:action',{action:action.dataset.editAction,key:action.dataset.editKey})}return}
+   if(action){event.preventDefault();event.stopImmediatePropagation();if(!busy){commit();post('portfolio:action',{action:action.dataset.editAction,key:action.dataset.editKey,collection:action.dataset.editWorkCollection,id:action.dataset.editWorkId,index:Number(action.dataset.editWorkIndex)})}return}
    const image=target.closest<HTMLElement>('[data-edit-image-id]')
    if(image){event.preventDefault();event.stopImmediatePropagation();commit();pick(image.dataset.editImageId!,image.dataset.editImageField||'image');return}
    const add=target.closest<HTMLElement>('[data-add-work]')
@@ -79,7 +86,25 @@ export function createOnPageEditing(){
        if(element.dataset.editRich){const toolbar=document.createElement('div');toolbar.className='on-page-rich-toolbar';(['strong','em','h2','p'] as const).forEach((tag,i)=>{const button=document.createElement('button');button.type='button';button.textContent=['Bold','Italic','Heading','Paragraph'][i];button.disabled=busy;button.addEventListener('mousedown',event=>event.preventDefault());button.addEventListener('click',()=>{if(formatRichSelection(element,tag)&&active){active.modified=true;capture();post('portfolio:pending',{pending:true})}});toolbar.append(button)});element.before(toolbar)}
      })
      document.querySelectorAll<HTMLElement>('[data-edit-image-id]').forEach(element=>{if(element.tagName!=='BUTTON'){element.setAttribute('role','button');element.tabIndex=busy?-1:0}element.setAttribute('aria-label',element.tagName==='BUTTON'&&!element.querySelector('img')?element.textContent||'Choose image':`Change image for ${element.querySelector('img')?.alt||'this artwork'}`);element.title='Click to change this image';const label=element.querySelector('.artwork-open');if(label)label.textContent=busy?'Please wait…':'Change image'})
-     document.querySelectorAll<HTMLElement>('[data-edit-collection-id]').forEach(section=>{const button=document.createElement('button');button.type='button';button.className='on-page-add-work';button.dataset.addWork=section.dataset.editCollectionId;button.textContent='Add artwork';button.disabled=busy;section.append(button)})
+     document.querySelectorAll<HTMLElement>('[data-edit-collection-id]').forEach(section=>{
+       const collection=section.dataset.editCollectionId!
+       const figures=Array.from(section.querySelectorAll<HTMLElement>('.artwork-grid figure[data-edit-work-id]'))
+       figures.forEach((figure,index)=>{
+         const id=figure.dataset.editWorkId!,title=figure.querySelector('[data-edit-field="title"]')?.textContent||'artwork'
+         const controls=document.createElement('div');controls.className='on-page-artwork-actions'
+         const handle=document.createElement('button');handle.type='button';handle.textContent='↕ Drag';handle.setAttribute('aria-label',`Drag ${title} to reorder`);handle.draggable=!busy;handle.disabled=busy;handle.className='on-page-drag-handle'
+         handle.addEventListener('mousedown',()=>{if(!busy)commit()})
+         handle.addEventListener('dragstart',event=>{if(busy){event.preventDefault();return}dragged={collection,id,index};event.dataTransfer?.setData('text/plain',id);if(event.dataTransfer)event.dataTransfer.effectAllowed='move'})
+         handle.addEventListener('dragend',()=>{dragged=null;document.querySelectorAll('[data-drag-over]').forEach(el=>el.removeAttribute('data-drag-over'))})
+         controls.append(handle)
+         for(const [action,label,disabled] of [['up-artwork','Move up',index===0],['down-artwork','Move down',index===figures.length-1],['remove-artwork','Remove artwork',false]] as const){const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-label',`${label}: ${title}`);Object.assign(button.dataset,{editAction:action,editWorkCollection:collection,editWorkId:id,editWorkIndex:String(index)});button.disabled=busy||disabled;controls.append(button)}
+         figure.append(controls);figure.querySelectorAll('img').forEach(img=>{img.draggable=false})
+         figure.addEventListener('dragover',event=>{if(!busy&&dragged?.collection===collection){event.preventDefault();figure.setAttribute('data-drag-over','')}})
+         figure.addEventListener('dragleave',event=>{if(!figure.contains(event.relatedTarget as Node|null))figure.removeAttribute('data-drag-over')})
+         figure.addEventListener('drop',event=>{event.preventDefault();figure.removeAttribute('data-drag-over');if(!busy&&dragged?.collection===collection&&dragged.index!==index)post('portfolio:action',{action:'move-artwork',...dragged,targetIndex:index});dragged=null})
+       })
+       const button=document.createElement('button');button.type='button';button.className='on-page-add-work';button.dataset.addWork=collection;button.textContent='Add artwork';button.disabled=busy;section.append(button)
+     })
      if(document.body.dataset.page==='cv'&&!document.querySelector('#cv-content [data-edit-rich]')){
        const rows=Array.from(document.querySelectorAll<HTMLElement>('[data-cv-key]'))
        rows.forEach((row,i)=>{const controls=document.createElement('div');controls.className='on-page-cv-actions';for(const [action,label,disabled] of [['up-cv','Move up',i===0],['down-cv','Move down',i===rows.length-1],['remove-cv','Remove entry',false]] as const){const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.editAction=action;button.dataset.editKey=row.dataset.cvKey;button.disabled=busy||disabled;controls.append(button)}row.append(controls)})

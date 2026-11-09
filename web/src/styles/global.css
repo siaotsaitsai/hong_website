@@ -31,3 +31,5 @@ input,textarea,select{font:inherit}
 #cv-content .cv-text{padding-top:40px;max-width:720px;font-size:16px;line-height:1.8}
 .cv-text p+p,.cv-text h2{margin-top:20px}
 .cv-text h2{margin-bottom:12px}
+
+.on-page-artwork-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}.on-page-artwork-actions button{border:1px solid #c9d2c1;background:#fff;border-radius:4px;padding:8px 10px;font-size:11px}.on-page-artwork-actions button:disabled{opacity:.4;cursor:default}.on-page-artwork-actions .on-page-drag-handle{cursor:grab}.on-page-artwork-actions .on-page-drag-handle:active{cursor:grabbing}body[data-on-page-edit] figure[data-drag-over]{outline:2px dashed #536450;outline-offset:12px}

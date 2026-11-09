@@ -39,3 +39,14 @@ test('mobile menu, artwork dialog, and layout work on a narrow screen',async ({p
   await page.screenshot({path:'/tmp/hong-mobile.png',fullPage:true});
 });
 test('desktop visual check',async ({page})=>{await page.setViewportSize({width:1440,height:1000});await sample(page);await page.goto('/');await expect(page.locator('.hero-figure img')).toBeVisible();await page.screenshot({path:'/tmp/hong-home.png',fullPage:true});await page.goto('/works/');await expect(page.locator('.artwork-grid figure')).toHaveCount(4);await page.evaluate(()=>document.fonts.ready);await expect(page.locator('.page-heading')).toHaveCount(0);expect(await page.locator('body').evaluate(el=>getComputedStyle(el).fontFamily)).toContain('Manrope');const boxes=await page.locator('.artwork-grid img').evaluateAll(images=>images.map(img=>{const r=img.getBoundingClientRect();const main=document.querySelector('main')!.getBoundingClientRect();return {width:r.width,height:r.height,center:r.x+r.width/2,mainCenter:main.x+main.width/2}}));expect(boxes.every(box=>Math.abs(box.width-458.92)<1&&Math.abs(box.center-box.mainCenter)<1)).toBe(true);expect(new Set(boxes.map(box=>Math.round(box.height))).size).toBeGreaterThan(1);await page.screenshot({path:'/tmp/hong-works.png',fullPage:true});});
+
+// A delayed or unavailable stylesheet must never turn a link icon into a giant arrow.
+test('page layout and arrow sizes survive blocked external stylesheets',async({page})=>{
+ await page.route('**/*.css',route=>route.abort())
+ await sample(page);await page.goto('/')
+ await expect(page.locator('.sidebar')).toHaveCSS('position','fixed')
+ await expect(page.locator('link[rel="stylesheet"]')).toHaveCount(0)
+ const icons=page.locator('svg.arrow');await expect(icons.first()).toBeVisible()
+ expect(await icons.evaluateAll(nodes=>nodes.every(node=>{const rect=node.getBoundingClientRect();return node.getAttribute('width')==='11'&&node.getAttribute('height')==='11'&&rect.width<=11&&rect.height<=11}))).toBe(true)
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+})
