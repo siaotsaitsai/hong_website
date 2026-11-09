@@ -1,3 +1,4 @@
+import {paintingsLinkLabel} from '../../shared/navigationLabels'
 import {artworkMedium} from '../../shared/artworkMedium'
 import {uploadImage} from './uploadImage'
 import type {SanityClient} from 'sanity'
@@ -27,12 +28,13 @@ export function pageSnapshot(page:PageName,documents:RawDocument[]):PageSnapshot
  const model=effective(documents)
  const root=rootIds[page]
  if(!model[root]){
-   if(page==='home')model[root]={_id:root,_type:root,siteTitle:'Hong Yang',homeCaption:'',portfolioLinkLabel:'Explore portfolio'}
+   if(page==='home')model[root]={_id:root,_type:root,siteTitle:'Hong Yang',homeCaption:'',portfolioLinkLabel:'Explore paintings'}
    if(page==='portfolio')model[root]={_id:root,_type:root,collections:model.siteSettings?.collections??Object.values(model).filter(doc=>doc._type==='collection').sort((a,b)=>String(a.title).localeCompare(String(b.title))).map(doc=>reference(doc._id))}
    if(page==='cv')model[root]={_id:root,_type:root,entries:model.artistProfile?.cv??[]}
    if(page==='statement')model[root]={_id:root,_type:root,body:model.artistProfile?.statement??[]}
    if(page==='about')model[root]={_id:root,_type:'artistProfile',name:'Hong Yang',introduction:''}
  }
+ if(page==='home')model[root]={...model[root],portfolioLinkLabel:paintingsLinkLabel(model[root].portfolioLinkLabel)}
  if(page==='portfolio')for(const id of portfolioTargets(model)){const doc=model[id];if(doc?._type==='artwork')model[id]={...doc,medium:artworkMedium(doc.medium)}}
  return {page,documents,model}
 }

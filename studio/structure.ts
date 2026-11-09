@@ -14,7 +14,7 @@ export const structure: StructureResolver = (S) => {
   )
   return S.list().title('Website').items([
     singleton('Home', 'siteSettings').icon(CogIcon),
-    S.listItem().title('Portfolio').icon(ImagesIcon).child(S.list().title('Portfolio').items([
+    S.listItem().title('Paintings').icon(ImagesIcon).child(S.list().title('Paintings').items([
       singleton('Collection order', 'portfolioSettings'),
       S.documentTypeListItem('collection').title('Collections — add or edit'),
       S.documentTypeListItem('artwork').title('Artworks — upload or edit'),

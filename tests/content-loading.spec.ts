@@ -5,7 +5,7 @@ for(const width of [390,1440])test(`slow content never flashes the sample templa
  await page.setViewportSize({width,height:1000})
  let release:(()=>void)|undefined
  await page.route('https://htq7wor5.api.sanity.io/**',async route=>{await new Promise<void>(resolve=>{release=resolve});await route.fulfill({json:{result:content}})})
- const visited:[string,string][]=[['/','Home'],['/works/','Portfolio'],['/cv/','CV'],['/artist-statement/','Artist Statement'],['/about/','About']]
+ const visited:[string,string][]=[['/','Home'],['/works/','Paintings'],['/cv/','CV'],['/artist-statement/','Artist Statement'],['/about/','About']]
  for(const [index,[path,label]] of visited.entries()){
    release=undefined
    if(index===0)await page.goto('/',{waitUntil:'domcontentloaded'})

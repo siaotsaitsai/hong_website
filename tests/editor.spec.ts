@@ -5,13 +5,13 @@ const work={_id:'work',title:'Published painting',image:{alt:'Painting',asset:{u
 const collection={_id:'collection',title:'New Series',description:'A real collection introduction.',showDescription:true,artworks:[work]}
 const content={settings:{homeImage:{alt:'Homepage image',asset:{url:'/art/light.svg'}},homeCaption:'A new homepage',homeText:'An editable line.\nAnother line.',portfolioLinkLabel:'View paintings',collections:[]},profile:{name:'Hong Yang',introduction:'Updated biography',cv:[{category:'other',year:'2000',title:'Legacy CV'}],statement:[{_type:'block',children:[{text:'Legacy statement'}]}]},portfolio:{collections:[collection]},cvPage:{entries:[{category:'exhibition',year:'2026',title:'New exhibition'}]},statementPage:{body:[{_type:'block',children:[{text:'New artist statement',marks:['strong']}]}]},artworks:[work],collections:[collection]}
 
-test('editor fields control Home, Portfolio, CV, Artist Statement, and About independently',async ({page})=>{
+test('editor fields control Home, Paintings, CV, Artist Statement, and About independently',async ({page})=>{
   await page.route(endpoint,r=>r.fulfill({json:{result:content}}))
   await page.goto('/')
   await expect(page.locator('.hero-figure figcaption')).toContainText('A new homepage')
   await expect(page.locator('#home-text')).toHaveText('An editable line.\nAnother line.')
   await expect(page.getByRole('link',{name:'View paintings'})).toBeVisible()
-  await page.getByRole('link',{name:'Portfolio',exact:true}).click()
+  await page.getByRole('link',{name:'Paintings',exact:true}).click()
   await expect(page.locator('.collection-heading h2')).toHaveText(['New Series'])
   await expect(page.locator('.collection-heading')).toContainText('A real collection introduction.')
   await expect(page.locator('.artwork-dimensions')).toHaveText('24 × 36 in')

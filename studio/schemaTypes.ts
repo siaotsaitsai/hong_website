@@ -46,7 +46,7 @@ const artistProfile = defineType({
 
 const siteSettings = defineType({
   name: 'siteSettings', title: 'Home', type: 'document',
-  initialValue: {siteTitle: 'Artist portfolio', description: 'Paintings, studies, and everyday observations.'},
+  initialValue: {siteTitle: 'Artist paintings', description: 'Paintings, studies, and everyday observations.'},
   fields: [
     defineField({name: 'siteTitle', title: 'Site title', type: 'string', validation: (r) => r.required()}),
     defineField({name: 'description', title: 'Site description', type: 'text', rows: 3, description: 'Used for search and sharing descriptions.'}),
@@ -54,7 +54,7 @@ const siteSettings = defineType({
     defineField({name: 'homeImage', title: 'Homepage image', description: 'Upload a homepage image, or leave empty to use the featured artwork below.', type: 'image', options: {hotspot: true}, fields: [defineField({name: 'alt', hidden: true, title: 'Image description', type: 'string'})]}),
     defineField({name: 'homeCaption', title: 'Homepage caption', type: 'string', description: 'Optional caption. Overrides the artwork title on the homepage only.'}),
     defineField({name: 'homeText', hidden: true, title: 'Homepage text', type: 'text', rows: 4}),
-    defineField({name: 'portfolioLinkLabel', title: 'Portfolio link text', type: 'string', initialValue: 'Explore portfolio'}),
+    defineField({name: 'portfolioLinkLabel', title: 'Paintings link text', type: 'string', initialValue: 'Explore paintings'}),
     defineField({name: 'collections', hidden: true, title: 'Visible collections and order', type: 'array', description: 'Choose published collections and drag to arrange them.', of: [defineArrayMember({type: 'reference', to: [{type: 'collection'}]})], validation: (r) => r.unique()}),
     defineField({name: 'email', hidden: true, title: 'Public contact email', type: 'string', validation: (r) => r.email()}),
     defineField({name: 'instagram', hidden: true, title: 'Instagram URL', type: 'url', validation: (r) => r.uri({scheme: ['https']})}),
@@ -62,7 +62,7 @@ const siteSettings = defineType({
 })
 
 const portfolioSettings = defineType({
-  name: 'portfolioSettings', title: 'Portfolio — collection order', type: 'document',
+  name: 'portfolioSettings', title: 'Paintings — collection order', type: 'document',
   initialValue: async (_params, context) => ({collections: await context.getClient({apiVersion: '2025-02-19'}).withConfig({perspective: 'drafts', useCdn: false}).fetch('*[_id=="siteSettings"][0].collections') ?? []}),
   fields: [defineField({name: 'collections', title: 'Collections to display', type: 'array', description: 'Add collections, then drag to arrange them. Publish the collections and their artworks as well. An empty list hides all collections.', of: [defineArrayMember({type: 'reference', to: [{type: 'collection'}]})], validation: r => r.unique()})],
 })

@@ -30,7 +30,7 @@ test('the actual webpage supports move buttons, drag ordering, cancellation and 
  await frame.getByRole('button',{name:'Remove artwork: B',exact:true}).click();await expect(page.getByRole('alertdialog')).toBeVisible();await page.getByRole('alertdialog').getByRole('button',{name:'Remove artwork',exact:true}).click();await expect(titles).toHaveText(['C','A'])
  await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect(page.getByRole('status')).toContainText('Draft saved')
  await expect(frame.getByRole('button',{name:'Move up: C',exact:true})).toBeDisabled();await expect(frame.getByRole('button',{name:'Move down: A',exact:true})).toBeDisabled()
- await page.getByRole('button',{name:'Publish',exact:true}).click();await page.getByRole('button',{name:'Yes, publish Portfolio',exact:true}).click();await expect(page.getByRole('status')).toContainText('Portfolio published');await expect(titles).toHaveText(['C','A'])
+ await page.getByRole('button',{name:'Publish',exact:true}).click();await page.getByRole('button',{name:'Yes, publish Paintings',exact:true}).click();await expect(page.getByRole('status')).toContainText('Paintings published');await expect(titles).toHaveText(['C','A'])
  await page.getByRole('button',{name:'Use forms',exact:true}).click();await expect(page.getByRole('option',{name:'B',exact:true})).toHaveCount(1)
 })
 

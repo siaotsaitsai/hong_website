@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test'
 import {sanityServer} from './helpers/sanityServer'
 import {createPageGateway,reference,rootIds,type DocumentModel} from '../studio/easy/pageGateway'
 
-test('Portfolio drafts use valid weak references, publish atomically, and keep work that is removed from view',async()=>{
+test('Paintings drafts use valid weak references, publish atomically, and keep work that is removed from view',async()=>{
  const fixture=await sanityServer([
    {_id:'asset',_type:'sanity.imageAsset',url:'https://cdn.sanity.io/images/htq7wor5/production/asset.jpg'},
    {_id:'old-work',_type:'artwork',_rev:'work-1',title:'Original work',image:{asset:{_ref:'asset'}}},

@@ -6,7 +6,7 @@ import type {Content} from '../web/src/lib/content'
 
 const website = new URL('https://siaotsaitsai.github.io/hong_website/')
 const routes: Record<string,string> = {siteSettings:'', portfolioSettings:'works/', artwork:'works/', collection:'works/', cvPage:'cv/', statementPage:'artist-statement/', artistProfile:'about/'}
-const pages = [['','Home'],['works/','Portfolio'],['cv/','CV'],['artist-statement/','Artist Statement'],['about/','About']]
+const pages = [['','Home'],['works/','Paintings'],['cv/','CV'],['artist-statement/','Artist Statement'],['about/','About']]
 const types = ['siteSettings','portfolioSettings','artwork','collection','artistProfile','cvPage','statementPage','sanity.imageAsset']
 
 export const WebsitePreview: UserViewComponent = ({document: editorDocument, schemaType}) => {
@@ -54,7 +54,7 @@ export const WebsitePreview: UserViewComponent = ({document: editorDocument, sch
       <button type="button" onClick={()=>setMobile(!mobile)}>{mobile?'Desktop width':'Mobile width'}</button>
       <button type="button" onClick={()=>setRefresh(value=>value+1)}>Refresh content</button>
       <a href={new URL(route,website).href} target="_blank" rel="noopener noreferrer">Open published website ↗</a>
-      <small style={{width:'100%',lineHeight:1.6}}>Draft preview — changes here are not public. Click Publish in Edit when ready. Portfolio items can also be created directly from their reference fields.</small>
+      <small style={{width:'100%',lineHeight:1.6}}>Draft preview — changes here are not public. Click Publish in Edit when ready. Paintings items can also be created directly from their reference fields.</small>
       <small role="status">{error || (connected?'Preview is up to date.':'Connecting preview… If it stays blank, refresh this tab after the website deployment completes.')}</small>
     </div>
     <iframe ref={frame} title="Website draft preview" src={src.href} onLoad={()=>{setConnected(false);send()}} style={{border:0,width:mobile?390:'100%',maxWidth:'100%',flex:1,margin:'0 auto',background:'white'}} />

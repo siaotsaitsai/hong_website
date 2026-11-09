@@ -7,7 +7,7 @@ import {pageSnapshot,portfolioTargets,type PageGateway} from '../../studio/easy/
 import type {EditorPage} from '../../studio/easy/EditorNav'
 import type {RawDocument} from '../../shared/previewContent'
 
-const published:RawDocument={_id:'siteSettings',_type:'siteSettings',_rev:'published-1',siteTitle:'Hong Yang',homeText:'Published welcome',homeCaption:'Published caption',heroArtwork:{_ref:'test-work'},portfolioLinkLabel:'Explore portfolio',description:'Keep this metadata'}
+const published:RawDocument={_id:'siteSettings',_type:'siteSettings',_rev:'published-1',siteTitle:'Hong Yang',homeText:'Published welcome',homeCaption:'Published caption',heroArtwork:{_ref:'test-work'},portfolioLinkLabel:'Explore paintings',description:'Keep this metadata'}
 let docs:RawDocument[]=[published,{_id:'test-work',_type:'artwork',title:'A quiet afternoon',image:{alt:'A quiet painting',asset:{_ref:'test-asset'}},dimensions:'24 × 36 in'},{_id:'test-asset',_type:'sanity.imageAsset',url:'https://cdn.sanity.io/images/htq7wor5/production/test-asset.jpg'}]
 const counters={saves:0,publishes:0,uploads:0}
 Object.assign(window,{editorTest:counters})

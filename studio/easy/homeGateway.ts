@@ -1,3 +1,4 @@
+import {paintingsLinkLabel} from '../../shared/navigationLabels'
 import {uploadImage} from './uploadImage'
 import type {SanityClient} from 'sanity'
 import type {RawDocument} from '../../shared/previewContent'
@@ -14,10 +15,10 @@ export const contentTypes=['siteSettings','portfolioSettings','artwork','collect
 const fields=(doc?: RawDocument) => Object.fromEntries(Object.entries(doc || {}).filter(([key])=>!key.startsWith('_')))
 export function homeForm(doc?: RawDocument): HomeForm {
   const image=doc?.homeImage as Record<string,unknown>|undefined
-  return {mode:image?'image':doc?.heroArtwork?'artwork':'image',image,imageDescription:String(image?.alt || ''),artworkId:String((doc?.heroArtwork as {_ref?:string})?._ref || ''),caption:String(doc?.homeCaption || ''),text:String(doc?.homeText || ''),linkLabel:String(doc?.portfolioLinkLabel ?? 'Explore portfolio')}
+  return {mode:image?'image':doc?.heroArtwork?'artwork':'image',image,imageDescription:String(image?.alt || ''),artworkId:String((doc?.heroArtwork as {_ref?:string})?._ref || ''),caption:String(doc?.homeCaption || ''),text:String(doc?.homeText || ''),linkLabel:paintingsLinkLabel(doc?.portfolioLinkLabel)}
 }
 export function homeDocument(form: HomeForm, base?: RawDocument): RawDocument {
-  const doc: RawDocument={...fields(base),_id:'drafts.siteSettings',_type:'siteSettings',siteTitle:base?.siteTitle || 'Hong Yang',homeCaption:form.caption,homeText:form.text,portfolioLinkLabel:form.linkLabel.trim() || 'Explore portfolio'}
+  const doc: RawDocument={...fields(base),_id:'drafts.siteSettings',_type:'siteSettings',siteTitle:base?.siteTitle || 'Hong Yang',homeCaption:form.caption,homeText:form.text,portfolioLinkLabel:form.linkLabel.trim() || 'Explore paintings'}
   delete doc.homeImage;delete doc.heroArtwork
   if(form.mode==='image' && form.image) doc.homeImage={...form.image,alt:form.imageDescription.trim() || form.caption.trim() || 'Artwork by Hong Yang'}
   if(form.mode==='artwork' && form.artworkId) doc.heroArtwork={_type:'reference',_ref:form.artworkId}

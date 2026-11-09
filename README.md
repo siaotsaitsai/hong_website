@@ -1,4 +1,4 @@
-# Hong — Artist Portfolio
+# Hong — Artist Paintings
 
 An English-language artist portfolio built with Astro and Sanity Studio.
 The website uses a white background, a persistent desktop navigation, responsive
@@ -63,8 +63,8 @@ in this cloud environment too, such as `/tmp/hong-sanity-config`.
 ## Content editing and draft preview
 
 See [EDITOR-GUIDE.md](EDITOR-GUIDE.md) for the step-by-step guide.
-The Studio has five top-level entries: Home, Portfolio, CV, Artist Statement, About.
-Portfolio contains collection ordering, collections and artworks. Home supports a
+The Studio has five top-level entries: Home, Paintings, CV, Artist Statement, About.
+Paintings contains collection ordering, collections and artworks. Home supports a
 standalone uploaded image or an artwork reference, caption and link label.
 
 CV (`cvPage`) and Artist Statement (`statementPage`) are independent singleton
@@ -84,7 +84,7 @@ A standalone URL cannot activate draft access. The public API query remains
 `perspective=published`, and no token is transmitted to the iframe.
 
 Both Studio and frontend must be deployed for this preview to work. Individual
-artwork/collection previews focus on the current item; the Portfolio order preview
+artwork/collection previews focus on the current item; the Paintings order preview
 represents the selected portfolio. Invited-member authentication, image upload and
 publish operations need a real member-session acceptance test, separate from the
 automated schema, normalization and browser bridge tests.
@@ -172,8 +172,8 @@ for that tool route, including managed Studio URL prefixes, while retaining the
 existing member authentication context. The standard editor remains at `/structure`.
 No separate CMS, hosting account, or administrator token is required by the browser.
 
-All five sections are available in the same shell: Home, Portfolio, CV,
-Artist Statement, About. Portfolio supports collection/work cards, batch and detail
+All five sections are available in the same shell: Home, Paintings, CV,
+Artist Statement, About. Paintings supports collection/work cards, batch and detail
 image uploads, drag handles, keyboard/mobile reorder buttons, and safe removal from
 visible collections without deleting stored artwork documents.
 
@@ -182,7 +182,7 @@ Home editor and gateway remain for compatibility tests. `RichTextEditor.tsx` sup
 Text paragraph, heading, bold and italic subset used by the public renderer. Existing
 content is retained until edited, and HTML paste is reduced to plain text.
 
-Draft batches weaken references to unpublished documents. Portfolio publication
+Draft batches weaken references to unpublished documents. Paintings publication
 strengthens references and publishes the visible collection graph atomically. Both
 draft and published revisions are checked; a conflict rolls back the entire batch.
 Saving drafts retains the original published revision guards until reload, rather

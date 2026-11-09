@@ -1,3 +1,4 @@
+import {paintingsLinkLabel} from '../../../shared/navigationLabels';
 import {artworkMedium} from '../../../shared/artworkMedium';
 import {richTextHtml} from '../../../shared/portableText';
 import {escapeHtml as e, imageUrl, formatDimensions, isEmpty, loadContent, placeholder, type Artwork, type Content, type Image} from './content';
@@ -39,7 +40,7 @@ function render(content: Content, sample: boolean) {
   gallery=[];
   const settings=content.settings;const profile=content.profile;
   const name=profile?.name || 'Hong Yang';document.querySelectorAll('[data-artist-name]').forEach(el=>{el.textContent=name;if(el.classList.contains('wordmark'))el.setAttribute('aria-label',`${name}, home`);});
-  const pageTitles: Record<string,string> = {works:'Portfolio', cv:'CV', statement:'Artist Statement', about:'About'};
+  const pageTitles: Record<string,string> = {works:'Paintings', cv:'CV', statement:'Artist Statement', about:'About'};
   document.title=`${document.body.dataset.page==='home' ? (settings?.siteTitle || 'Home') : (pageTitles[document.body.dataset.page || ''] || 'Home')} — ${name}`;
   if(settings?.description) document.querySelector('meta[name="description"]')?.setAttribute('content',settings.description);
   let collections=content.portfolio ? (content.portfolio.collections || []) : (settings?.collections ?? content.collections);
@@ -61,7 +62,7 @@ function render(content: Content, sample: boolean) {
   if(cvPage) cvPage.innerHTML=Array.isArray(content.cvPage?.body)?`<div class="statement cv-text" data-edit-id="cvPage" data-edit-field="body" data-edit-rich="true" data-edit-multiline="true" data-edit-value="${e(JSON.stringify(content.cvPage.body))}" data-edit-label="CV text">${richTextHtml(content.cvPage.body)||'<p></p>'}</div>`:cvEntries.length ? `<section class="cv">${cvEntries.map((item,i)=>`<div data-cv-key="${e(item._key??i)}"><span class="eyebrow" data-edit-id="cvPage" data-edit-field="cv.category" data-edit-key="${e(item._key??i)}" data-edit-select="true" data-edit-value="${e(item.category)}" data-edit-label="CV category">${e(item.category)}</span><span data-edit-id="cvPage" data-edit-field="cv.year" data-edit-key="${e(item._key??i)}" data-edit-value="${e(item.year)}" data-edit-label="CV year" data-edit-placeholder="Year">${e(item.year)}</span><p data-edit-id="cvPage" data-edit-field="cv.title" data-edit-key="${e(item._key??i)}" data-edit-value="${e(item.title)}" data-edit-label="CV title and location">${e(item.title)}</p></div>`).join('')}</section>` : '<p class="empty-state">CV coming soon.</p>';
   const homeText=document.querySelector<HTMLElement>('#home-text');
   if(homeText) {homeText.textContent=settings?.homeText || '';homeText.hidden=!settings?.homeText;}
-  const linkLabel=document.querySelector('#portfolio-link-label');if(linkLabel){linkLabel.textContent=settings?.portfolioLinkLabel ?? 'Explore portfolio';Object.assign((linkLabel as HTMLElement).dataset,{editId:'siteSettings',editField:'portfolioLinkLabel',editValue:settings?.portfolioLinkLabel ?? 'Explore portfolio',editLabel:'Portfolio button text'});}
+  const linkLabel=document.querySelector('#portfolio-link-label');if(linkLabel){linkLabel.textContent=paintingsLinkLabel(settings?.portfolioLinkLabel);Object.assign((linkLabel as HTMLElement).dataset,{editId:'siteSettings',editField:'portfolioLinkLabel',editValue:paintingsLinkLabel(settings?.portfolioLinkLabel),editLabel:'Paintings button text'});}
   document.querySelectorAll('[aria-busy]').forEach(el=>el.setAttribute('aria-busy','false'));
 }
 const params=new URLSearchParams(location.search);

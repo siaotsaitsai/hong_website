@@ -3,7 +3,7 @@
 Open <https://hong-portfolio-htq7wor5.sanity.studio/edit> and sign in with your
 approved owner account. Bookmark this address for future editing.
 Only the two approved owner accounts can enter; public visitors cannot edit. The five buttons on the left match the website:
-**Home, Portfolio, CV, Artist Statement, About**. On a phone, use the top row of tabs.
+**Home, Paintings, CV, Artist Statement, About**. On a phone, use the top row of tabs.
 
 All five pages open in **Edit on page** mode. Click the actual images and text to
 change them. Use **Mobile** to check the narrow layout, or **Use forms** for extra
@@ -16,14 +16,14 @@ controls. The draft preview is not public.
 
 ## Home
 
-Click the homepage image to replace it, and click its caption or the Portfolio
+Click the homepage image to replace it, and click its caption or the Paintings
 button label to change the text. Image descriptions are filled automatically;
 there is no manual description or homepage-body-text field. Existing stored text
 is preserved. Uploading an image alone does not publish the page.
 
-## Portfolio
+## Paintings
 
-Portfolio opens in **Edit on page** mode: the canvas is the actual website,
+Paintings opens in **Edit on page** mode: the canvas is the actual website,
 with editing enabled only inside the signed-in editor.
 
 - Click a collection name, artwork title, year, medium, or dimensions to edit in place.
@@ -52,7 +52,7 @@ restore a saved one. Edit its title and optional introduction. Enable **Show
 introduction on website** if you want the text visible.
 
 Drag the handle or use the up/down arrows to arrange the collections. Removing a
-collection from Portfolio hides it from the selected order; it does not erase its
+collection from Paintings hides it from the selected order; it does not erase its
 stored artworks. You can add the collection back later.
 
 ### Artworks
@@ -69,7 +69,7 @@ Inside a collection:
 
 Missing artwork medium defaults to **Oil on canvas**. Existing media such as
 **Oil on panel** are preserved. Click the medium beneath any artwork to edit it;
-saving/publishing Portfolio stores the displayed defaults for visible works.
+saving/publishing Paintings stores the displayed defaults for visible works.
 
 Dimensions default to inches. Enter `24 × 36`, or explicitly include another unit,
 such as `60 × 80 cm`. Image descriptions and URL slugs are generated automatically;
@@ -79,9 +79,9 @@ no manual technical fields are required.
 its images remain stored. Editing an artwork used in several collections changes
 that work everywhere.
 
-### Publishing Portfolio
+### Publishing Paintings
 
-**Publish Portfolio** publishes the visible collection order, those collections,
+**Publish Paintings** publishes the visible collection order, those collections,
 and their artwork drafts together. It does not publish unrelated Home, CV,
 Artist Statement or About changes. Draft works outside the visible collections
 stay drafts. Revision conflicts cancel the entire publication rather than leaving

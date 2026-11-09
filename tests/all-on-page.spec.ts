@@ -17,7 +17,7 @@ test('Home image, caption and link label edit directly on the actual webpage',as
  const frame=page.frameLocator('iframe')
  const caption=frame.getByRole('textbox',{name:'Homepage caption',exact:true})
  await expect(caption).toBeVisible();await caption.fill('A new homepage caption');await caption.press('Enter')
- const label=frame.getByRole('textbox',{name:'Portfolio button text',exact:true});await label.fill('View my work');await label.press('Enter')
+ const label=frame.getByRole('textbox',{name:'Paintings button text',exact:true});await label.fill('View my work');await label.press('Enter')
  await expect(frame.locator('body')).toHaveAttribute('data-page','home')
  const chooser=page.waitForEvent('filechooser');await frame.getByRole('button',{name:/Change image for/}).click();await(await chooser).setFiles(image)
  await expect.poll(()=>page.evaluate(()=>Reflect.get(window,'editorTest').uploads)).toBe(1)

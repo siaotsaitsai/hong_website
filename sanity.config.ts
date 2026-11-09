@@ -11,7 +11,7 @@ if (!projectId) {
 
 export default defineConfig({
   name: 'hong-portfolio',
-  title: 'Artist Portfolio · Studio',
+  title: 'Artist Paintings · Studio',
   projectId,
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   components: {layout: EditorLayout},

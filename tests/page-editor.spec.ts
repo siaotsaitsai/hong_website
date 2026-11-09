@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test'
 test.beforeEach(async({page})=>{await page.route('https://cdn.sanity.io/**',route=>route.fulfill({path:'web/public/art/window.svg',contentType:'image/svg+xml'}))})
 const image={name:'painting.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')}
 
-test('Portfolio cards support upload, details, artwork and collection ordering, draft and bundle publication',async({page})=>{
+test('Paintings cards support upload, details, artwork and collection ordering, draft and bundle publication',async({page})=>{
  await page.goto('http://127.0.0.1:3333/tests/easy/?section=portfolio')
  await page.getByRole('button',{name:'Add collection',exact:true}).click()
  await page.getByRole('textbox',{name:'Collection title'}).fill('First series')
@@ -32,9 +32,9 @@ test('Portfolio cards support upload, details, artwork and collection ordering, 
  await expect(page.getByRole('status')).toContainText('public website has not changed')
  expect(await page.evaluate(()=>Reflect.get(window,'editorTest').publishes)).toBe(0)
  await page.getByRole('button',{name:'Publish',exact:true}).click()
- await expect(page.getByRole('button',{name:'Yes, publish Portfolio'})).toBeVisible()
- await page.getByRole('button',{name:'Yes, publish Portfolio'}).click()
- await expect(page.getByRole('status')).toContainText('Portfolio published')
+ await expect(page.getByRole('button',{name:'Yes, publish Paintings'})).toBeVisible()
+ await page.getByRole('button',{name:'Yes, publish Paintings'}).click()
+ await expect(page.getByRole('status')).toContainText('Paintings published')
  await page.setViewportSize({width:1440,height:1000})
  await page.locator('.easy-editor').evaluate(el=>{el.scrollTop=0})
  await page.evaluate(()=>window.scrollTo(0,0))
