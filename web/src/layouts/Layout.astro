@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 const {title, page} = Astro.props;
+const shareTitle = page === 'home' ? 'Hong Yang' : `${title} — Hong Yang`;
+const shareDescription = 'Paintings by Hong Yang.';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <!doctype html>
@@ -8,9 +10,13 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Paintings, studies, and a practice in looking. The artist portfolio of Hong Yang." />
+  <meta name="description" content={shareDescription} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Hong Yang" />
+  <meta property="og:title" content={shareTitle} />
+  <meta property="og:description" content={shareDescription} />
   <meta name="theme-color" content="#ffffff" />
-  <title>{title} — Hong Yang</title>
+  <title>{shareTitle}</title>
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body data-page={page}>
