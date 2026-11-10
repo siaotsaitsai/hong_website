@@ -1,3 +1,4 @@
+import {websiteUrl} from '../../shared/websiteUrl'
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react'
 import {resolvePreview,type RawDocument} from '../../shared/previewContent'
 import {createHomeGateway,homeDocument,validateHome,type HomeForm,type HomeGateway,type HomeSnapshot} from './homeGateway'
@@ -6,7 +7,7 @@ import './editor.css'
 
 function Arrow(){return <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" strokeWidth="1.2"/></svg>}
 
-const website='https://siaotsaitsai.github.io/hong_website/'
+const website=websiteUrl
 const studio='https://hong-portfolio-htq7wor5.sanity.studio'
 function errorMessage(error: unknown) {
   const status=(error as {statusCode?:number})?.statusCode

@@ -1,10 +1,11 @@
+import {websiteUrl} from '../shared/websiteUrl'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useClient} from 'sanity'
 import type {UserViewComponent} from 'sanity/structure'
 import {resolvePreview, type RawDocument} from '../shared/previewContent'
 import type {Content} from '../web/src/lib/content'
 
-const website = new URL('https://siaotsaitsai.github.io/hong_website/')
+const website = new URL(websiteUrl)
 const routes: Record<string,string> = {siteSettings:'', portfolioSettings:'works/', artwork:'works/', collection:'works/', cvPage:'cv/', statementPage:'artist-statement/', artistProfile:'about/'}
 const pages = [['','Home'],['works/','Paintings'],['cv/','CV'],['artist-statement/','Artist Statement'],['about/','About']]
 const types = ['siteSettings','portfolioSettings','artwork','collection','artistProfile','cvPage','statementPage','sanity.imageAsset']

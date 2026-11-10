@@ -19,11 +19,13 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+      - uses: actions/configure-pages@v5
+        id: pages
       - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run build
         env:
-          BASE_PATH: /hong_website
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
           PUBLIC_SANITY_PROJECT_ID: htq7wor5
           PUBLIC_SANITY_DATASET: production
       - uses: actions/upload-pages-artifact@v3

@@ -1,3 +1,4 @@
+import {websiteUrl} from '../../shared/websiteUrl'
 import {useMemo,useState} from 'react'
 import {useClient,useCurrentUser,useWorkspace} from 'sanity'
 import {useRouter} from 'sanity/router'
@@ -19,6 +20,6 @@ export function EditorLayout(props: LayoutProps) {
   const user=useCurrentUser()
   const workspace=useWorkspace()
   useRouter() // Re-render when the tool changes through Studio navigation.
-  if(!canAccessEditor(user?.id))return <div style={{padding:50,fontFamily:'Arial,sans-serif',background:'white',color:'#272b28'}}><h1>Private website editor</h1><p>This editor is available only to the two approved owner accounts.</p>{workspace.auth.logout&&<button type="button" onClick={()=>{void workspace.auth.logout!().then(()=>location.reload())}}>Sign out and use another account</button>}<p><a href="https://siaotsaitsai.github.io/hong_website/">Return to website</a></p></div>
+  if(!canAccessEditor(user?.id))return <div style={{padding:50,fontFamily:'Arial,sans-serif',background:'white',color:'#272b28'}}><h1>Private website editor</h1><p>This editor is available only to the two approved owner accounts.</p>{workspace.auth.logout&&<button type="button" onClick={()=>{void workspace.auth.logout!().then(()=>location.reload())}}>Sign out and use another account</button>}<p><a href={websiteUrl}>Return to website</a></p></div>
   return typeof window!=='undefined' && /\/edit\/?$/.test(window.location.pathname) ? <HomeEditor/> : props.renderDefault(props)
 }

@@ -1,3 +1,4 @@
+import {websiteUrl} from '../../shared/websiteUrl'
 import {applyPortfolioAction} from '../../shared/portfolioActions'
 import {cvEntriesToText} from '../../shared/cvText'
 import {useCallback,useEffect,useMemo,useRef,useState} from 'react'
@@ -7,7 +8,7 @@ import {EditorNav,editorPages,type EditorPage} from './EditorNav'
 import {RichTextEditor,type TextBlock} from './RichTextEditor'
 import {reference,references,rootIds,validatePage,type DocumentModel,type PageGateway,type PageName,type PageSnapshot} from './pageGateway'
 import './editor.css'
-const website='https://siaotsaitsai.github.io/hong_website/'
+const website=websiteUrl
 const studio='https://hong-portfolio-htq7wor5.sanity.studio'
 const routes:Record<PageName,string>={home:'',portfolio:'works/',cv:'cv/',statement:'artist-statement/',about:'about/'}
 const list=<T,>(value:unknown):T[]=>Array.isArray(value)?value:[]
