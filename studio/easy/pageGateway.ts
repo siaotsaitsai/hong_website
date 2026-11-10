@@ -1,3 +1,4 @@
+import {aboutContacts,instagramHref,emailHref} from '../../shared/aboutContacts'
 import {paintingsLinkLabel} from '../../shared/navigationLabels'
 import {artworkMedium} from '../../shared/artworkMedium'
 import {uploadImage} from './uploadImage'
@@ -34,6 +35,7 @@ export function pageSnapshot(page:PageName,documents:RawDocument[]):PageSnapshot
    if(page==='statement')model[root]={_id:root,_type:root,body:model.artistProfile?.statement??[]}
    if(page==='about')model[root]={_id:root,_type:'artistProfile',name:'Hong Yang',introduction:''}
  }
+ if(page==='about')model[root]={...model[root],...aboutContacts(model[root],model.siteSettings)}
  if(page==='home')model[root]={...model[root],portfolioLinkLabel:paintingsLinkLabel(model[root].portfolioLinkLabel)}
  if(page==='portfolio')for(const id of portfolioTargets(model)){const doc=model[id];if(doc?._type==='artwork')model[id]={...doc,medium:artworkMedium(doc.medium)}}
  return {page,documents,model}
@@ -67,6 +69,8 @@ export function validatePage(snapshot:PageSnapshot):string|null {
    }
  }
  if(page==='home'&&!String(model.siteSettings?.siteTitle||'').trim())return 'Enter a website title before publishing.'
+ if(page==='about'&&model.artistProfile.instagram&&!instagramHref(model.artistProfile.instagram))return 'Enter an Instagram profile URL or @username.'
+ if(page==='about'&&model.artistProfile.email&&!emailHref(model.artistProfile.email))return 'Enter a valid contact email address.'
  if(page==='about'&&!String(model.artistProfile?.name||'').trim())return 'Enter the artist name before publishing.'
  if(page==='cv'&&!Array.isArray(model.cvPage.body))for(const entry of (model.cvPage.entries || []) as {category?:string;title?:string}[])if(!entry.category||!entry.title?.trim())return 'Choose a category and enter a title for each CV entry.'
  return null

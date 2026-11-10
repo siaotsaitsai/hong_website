@@ -114,6 +114,11 @@ line; Ctrl/Cmd+Enter finishes editing. Click the portrait to replace it, or use 
 upload button if no portrait exists. **Use forms** also supports portrait removal. The name also appears in the public website navigation and
 copyright. CV and Artist Statement are edited independently.
 
+In **Use forms**, edit **Instagram profile** and **Contact email** to update the
+buttons beneath the biography. Instagram accepts a profile URL or @username.
+Email opens the visitor’s mail app. Leaving a field empty hides its button after
+publishing. Existing contact fields are preserved when editing other pages.
+
 ## Image uploads
 
 Use JPG, PNG, WebP or GIF, up to 20 MB per file. Images are uploaded when selected;

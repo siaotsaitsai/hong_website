@@ -35,6 +35,8 @@ const artistProfile = defineType({
     defineField({name: 'name', title: 'Name / artist name', type: 'string', validation: (r) => r.required()}),
     defineField({name: 'portrait', title: 'Portrait', type: 'image', options: {hotspot: true}, fields: [defineField({name: 'alt', title: 'Image description', type: 'string', validation: (r) => r.required()})]}),
     defineField({name: 'introduction', title: 'Introduction', type: 'text', rows: 4}),
+    defineField({name: 'instagram', title: 'Instagram profile', type: 'string', description: 'Your profile URL or @username.'}),
+    defineField({name: 'email', title: 'Public contact email', type: 'string', validation: r => r.email()}),
     defineField({name: 'statement', hidden: true, title: 'Artist statement', type: 'array', of: [defineArrayMember({type: 'block', styles: [{title: 'Paragraph', value: 'normal'}, {title: 'Heading', value: 'h2'}], marks: {decorators: [{title: 'Bold', value: 'strong'}, {title: 'Italic', value: 'em'}], annotations: []}})]}),
     defineField({name: 'cv', hidden: true, title: 'Exhibitions, education, and residencies', type: 'array', description: 'Drag to change the display order.', of: [defineArrayMember({name: 'cvEntry', title: 'Experience', type: 'object', fields: [
       defineField({name: 'category', title: 'Category', type: 'string', options: {list: [{title: 'Exhibition', value: 'exhibition'}, {title: 'Education', value: 'education'}, {title: 'Residency', value: 'residency'}, {title: 'Other', value: 'other'}]}, validation: (r) => r.required()}),

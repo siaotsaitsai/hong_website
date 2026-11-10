@@ -35,8 +35,8 @@ export function resolvePreview(documents: RawDocument[], displayed?: Partial<Raw
   const cv = docs.get('cvPage')
   const statement = docs.get('statementPage')
   const content: Content = {
-    settings: settings ? {siteTitle: text(settings.siteTitle), description: text(settings.description), heroArtwork: artwork(dereference(settings.heroArtwork)), homeImage: image(settings.homeImage), homeCaption: text(settings.homeCaption), homeText: text(settings.homeText), portfolioLinkLabel: text(settings.portfolioLinkLabel), collections: settings.collections === undefined ? undefined : refs(settings.collections)} : null,
-    profile: profile ? {name: text(profile.name), introduction: text(profile.introduction), portrait: image(profile.portrait), statement: list(profile.statement) as Profile['statement'], cv: list(profile.cv) as Profile['cv']} : null,
+    settings: settings ? {email:text(settings.email),instagram:text(settings.instagram),siteTitle: text(settings.siteTitle), description: text(settings.description), heroArtwork: artwork(dereference(settings.heroArtwork)), homeImage: image(settings.homeImage), homeCaption: text(settings.homeCaption), homeText: text(settings.homeText), portfolioLinkLabel: text(settings.portfolioLinkLabel), collections: settings.collections === undefined ? undefined : refs(settings.collections)} : null,
+    profile: profile ? {email:text(profile.email),instagram:text(profile.instagram),name: text(profile.name), introduction: text(profile.introduction), portrait: image(profile.portrait), statement: list(profile.statement) as Profile['statement'], cv: list(profile.cv) as Profile['cv']} : null,
     portfolio: portfolio ? {collections: refs(portfolio.collections)} : null,
     cvPage: cv ? {entries: list(cv.entries) as NonNullable<Profile['cv']>,...(Array.isArray(cv.body)?{body:cv.body as NonNullable<Profile['statement']>}:{})} : null,
     statementPage: statement ? {body: list(statement.body) as NonNullable<Profile['statement']>} : null,
