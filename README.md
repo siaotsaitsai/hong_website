@@ -6,6 +6,7 @@ mobile navigation, collection galleries, and an accessible artwork dialog.
 
 ## Website and Studio
 
+- Visitor website: <https://hongyang.art/>.
 - Visitor website source: `web/`; production output: `web/dist/`.
 - Studio: <https://hong-portfolio-htq7wor5.sanity.studio/>.
 - Sanity project: `htq7wor5`; dataset: `production`.
@@ -120,9 +121,14 @@ custom-domain GitHub Pages site:
 - Publish/output directory: `web/dist`
 - Add the final site origin to Sanity CORS (without credentials).
 
-For GitHub Pages, the workflow sets `BASE_PATH=/hong_website`. Navigation, bundled assets,
-and sample image URLs respect this base path. To build for a root domain, omit BASE_PATH.
-Sanity CORS has been configured for `https://siaotsaitsai.github.io` (without credentials).
+For GitHub Pages, `actions/configure-pages` supplies `BASE_PATH` automatically from
+the repository Pages settings: `/hong_website` for the project URL, or an empty path
+for the custom domain. Navigation, bundled assets and sample images respect it.
+Sanity CORS allows `https://hongyang.art`, `https://www.hongyang.art` and the earlier
+GitHub origin without credentials. Studio previews use `shared/websiteUrl.ts`.
+The custom domain is configured in GitHub Settings → Pages; enable Enforce HTTPS
+after GitHub has issued its certificate. DNS uses the four GitHub Pages A records
+for the apex, and a DNS-only `www` CNAME to `siaotsaitsai.github.io`.
 The GitHub repository Pages source must be set to GitHub Actions. The workflow builds
 and uploads `web/dist`, then deploys using GitHub’s short-lived Pages OIDC credentials;
 it needs no Sanity deployment token. A push to `main` updates the frontend code; content
