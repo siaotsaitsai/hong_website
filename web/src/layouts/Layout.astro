@@ -36,7 +36,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   </>}
   <meta name="theme-color" content="#ffffff" />
   <title>{shareTitle}</title>
-  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  <link rel="icon" href={`${base}favicon-eyeshadow-v1.ico`} type="image/x-icon" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href={`${base}favicon-eyeshadow-v1-32.png`} type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href={`${base}apple-touch-icon-eyeshadow-v1.png`} sizes="180x180" />
 </head>
 <body data-page={page}>
   {shareImage?.thumbnailUrl && <div class="share-thumbnail" aria-hidden="true"><img src={new URL(shareImage.thumbnailUrl).pathname} width="400" height="400" alt="" decoding="async" /></div>}

@@ -257,3 +257,8 @@ files improve basic compatibility without claiming that integration. A failed JP
 publishing incomplete preview metadata. In the cloud
 executor, use `NODE_USE_ENV_PROXY=1` with Node 24 when building so the server-side
 metadata request uses the configured proxy. No write token is used for this request.
+
+The favicon is a crop of the homepage painting *Eyeshadow*, using the color-palette
+detail (source rectangle: 1020,650,1350,1350 in the original 3000×3818 image). PNG,
+multi-size ICO and Apple touch icons use versioned filenames. Legacy `/favicon.ico`
+and `/favicon.svg` paths also resolve to this artwork instead of the original H.
