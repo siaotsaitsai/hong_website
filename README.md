@@ -240,3 +240,13 @@ browser `assets.upload` XHR path bypasses this handler and can fail with an XHR
 network error. The shared upload helper preserves the current member session,
 passes the original File bytes and MIME type, and keeps API permission errors.
 Browser regression tests cover the host bridge and both gateway upload paths.
+
+## Social link previews
+
+The HTML includes an absolute Open Graph JPEG image URL selected from the published
+homepage image, featured artwork, or first published artwork at build time. Crawlers
+can read it without JavaScript; share descriptions remain empty. Rebuild the site
+to refresh this image after replacing the homepage artwork. Social services keep
+their own preview caches, so previously sent cards may not refresh. In the cloud
+executor, use `NODE_USE_ENV_PROXY=1` with Node 24 when building so the server-side
+metadata request uses the configured proxy. No write token is used for this request.

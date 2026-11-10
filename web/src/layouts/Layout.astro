@@ -1,8 +1,12 @@
 ---
 import '../styles/global.css';
+import {getShareImage} from '../lib/server/shareImage';
+import {websiteUrl} from '../../../shared/websiteUrl';
 const {title, page} = Astro.props;
 const shareTitle = page === 'home' ? 'Hong Yang' : `${title} — Hong Yang`;
 const shareDescription = '';
+const shareImage = await getShareImage();
+const canonicalUrl = new URL(Astro.url.pathname,websiteUrl).href;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <!doctype html>
@@ -15,6 +19,19 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   <meta property="og:site_name" content="Hong Yang" />
   <meta property="og:title" content={shareTitle} />
   <meta property="og:description" content={shareDescription} />
+  <meta property="og:url" content={canonicalUrl} />
+  <link rel="canonical" href={canonicalUrl} />
+  {shareImage && <>
+    <meta property="og:image" content={shareImage.url} />
+    <meta property="og:image:secure_url" content={shareImage.url} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content={shareImage.alt} />
+    {shareImage.width && <meta property="og:image:width" content={String(shareImage.width)} />}
+    {shareImage.height && <meta property="og:image:height" content={String(shareImage.height)} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={shareImage.url} />
+    <meta name="twitter:title" content={shareTitle} />
+  </>}
   <meta name="theme-color" content="#ffffff" />
   <title>{shareTitle}</title>
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
