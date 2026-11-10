@@ -42,7 +42,8 @@ function render(content: Content, sample: boolean) {
   const name=profile?.name || 'Hong Yang';document.querySelectorAll('[data-artist-name]').forEach(el=>{el.textContent=name;if(el.classList.contains('wordmark'))el.setAttribute('aria-label',`${name}, home`);});
   const pageTitles: Record<string,string> = {works:'Paintings', cv:'CV', statement:'Artist Statement', about:'About'};
   document.title=`${document.body.dataset.page==='home' ? (settings?.siteTitle || 'Home') : (pageTitles[document.body.dataset.page || ''] || 'Home')} — ${name}`;
-  if(settings?.description) document.querySelector('meta[name="description"]')?.setAttribute('content',settings.description);
+  // Keep link-preview descriptions empty, including when legacy CMS copy exists.
+  document.querySelector('meta[name="description"]')?.setAttribute('content','');
   let collections=content.portfolio ? (content.portfolio.collections || []) : (settings?.collections ?? content.collections);
   collections=collections.filter(Boolean).map(col=>({...col,artworks:(col.artworks || []).filter(Boolean)}));
   if (!collections.length && content.artworks.length && !settings?.collections && !content.portfolio) collections=[{_id:'all',title:'Collected Works',artworks:content.artworks}];
