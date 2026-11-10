@@ -31,12 +31,15 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={shareImage.url} />
     <meta name="twitter:title" content={shareTitle} />
+    <meta itemprop="image" content={shareImage.thumbnailUrl || shareImage.url} />
+    <link rel="image_src" href={shareImage.thumbnailUrl || shareImage.url} />
   </>}
   <meta name="theme-color" content="#ffffff" />
   <title>{shareTitle}</title>
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body data-page={page}>
+  {shareImage?.thumbnailUrl && <div class="share-thumbnail" aria-hidden="true"><img src={new URL(shareImage.thumbnailUrl).pathname} width="400" height="400" alt="" decoding="async" /></div>}
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="sidebar">
     <a class="wordmark" href={base} aria-label="Hong Yang, home" data-artist-name>Hong Yang</a>

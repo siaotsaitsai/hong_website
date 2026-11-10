@@ -243,10 +243,17 @@ Browser regression tests cover the host bridge and both gateway upload paths.
 
 ## Social link previews
 
-The HTML includes an absolute Open Graph JPEG image URL selected from the published
-homepage image, featured artwork, or first published artwork at build time. Crawlers
+The build downloads JPEGs selected from the published homepage image, featured
+artwork, or first published artwork. Versioned files are hosted under `/social/`
+on the website’s own origin. The HTML includes Open Graph tags plus a small square
+thumbnail in its original body for crawlers that do not execute JavaScript. Crawlers
 can read it without JavaScript; share descriptions remain empty. Rebuild the site
 to refresh this image after replacing the homepage artwork. Social services keep
-their own preview caches, so previously sent cards may not refresh. In the cloud
+their own preview caches, so previously sent cards may not refresh. Ordinary WeChat
+link previews are best effort. Explicit share-menu configuration inside WeChat
+requires an eligible official account, a verified JS API domain and server-side
+JS-SDK signing; it does not force-refresh cached previews of pasted links. These
+files improve basic compatibility without claiming that integration. A failed JPEG fetch fails the build rather than
+publishing incomplete preview metadata. In the cloud
 executor, use `NODE_USE_ENV_PROXY=1` with Node 24 when building so the server-side
 metadata request uses the configured proxy. No write token is used for this request.

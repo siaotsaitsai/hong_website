@@ -14,10 +14,17 @@ test('link crawlers can read a share image and empty description without JavaScr
  try{
    const page=await context.newPage();await page.route('https://htq7wor5.api.sanity.io/**',route=>route.abort())
    await page.goto('http://127.0.0.1:4322/?utm_source=ig&fbclid=example')
-   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content',/^https:\/\/cdn\.sanity\.io\/images\/htq7wor5\/production\/.+fm=jpg/)
+   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content',/^https:\/\/hongyang\.art\/social\/homepage-[a-f0-9]+\.jpg$/)
    await expect(page.locator('meta[property="og:image:type"]')).toHaveAttribute('content','image/jpeg')
    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content','')
    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content','https://hongyang.art/')
    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content','Hong Yang')
+   const thumbnail=page.locator('body > .share-thumbnail img')
+   await expect(thumbnail).toHaveAttribute('src',/^\/social\/homepage-[a-f0-9]+-thumbnail\.jpg$/)
+   await expect(page.locator('link[rel="image_src"]')).toHaveAttribute('href',/^https:\/\/hongyang\.art\/social\/.+-thumbnail\.jpg$/)
+   const response=await page.request.get((await thumbnail.getAttribute('src'))!)
+   expect(response.status()).toBe(200);expect(response.headers()['content-type']).toContain('image/jpeg')
+   const bytes=await response.body();expect(bytes[0]).toBe(0xff);expect(bytes[1]).toBe(0xd8)
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
  }finally{await context.close()}
 })

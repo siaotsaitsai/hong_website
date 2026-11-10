@@ -41,3 +41,5 @@ input,textarea,select{font:inherit}
 .on-page-artwork-actions .on-page-drag-handle{touch-action:none;user-select:none}
 
 .about-contacts{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}.about-contacts a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:10px;border:0;background:transparent;color:#737373}.about-contacts a:hover{color:#454545}.about-contacts svg{width:20px;height:20px;stroke-width:2.2;flex-shrink:0}
+
+.share-thumbnail{position:absolute;left:-10000px;top:0;width:400px;height:400px;overflow:hidden;pointer-events:none}
